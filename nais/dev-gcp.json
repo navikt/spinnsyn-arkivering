@@ -3,5 +3,6 @@
   "namespace": "flex",
   "team": "flex",
   "kafkaPool": "nav-dev",
-  "azureTenant": "trygdeetaten.no"
+  "azureTenant": "trygdeetaten.no",
+  "ingress": "https://spinnsyn-arkivering.dev.nav.no"
 }
