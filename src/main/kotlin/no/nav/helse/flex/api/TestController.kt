@@ -4,6 +4,7 @@ import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.pdfgenerering.Environment
 import no.nav.helse.flex.pdfgenerering.createPDFA
+import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
+@Unprotected
 @Profile("testcontroller")
 class TestController(
     val spinnsynFrontendArkiveringClient: SpinnsynFrontendArkiveringClient
