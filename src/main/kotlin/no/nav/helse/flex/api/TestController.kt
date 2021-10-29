@@ -1,5 +1,6 @@
 package no.nav.helse.flex.api
 
+import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.pdfgenerering.Environment
 import no.nav.helse.flex.pdfgenerering.createPDFA
@@ -7,11 +8,14 @@ import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @Profile("testcontroller")
-class TestController {
+class TestController(
+    val spinnsynFrontendArkiveringClient: SpinnsynFrontendArkiveringClient
+) {
 
     private val log = logger()
 
@@ -31,10 +35,10 @@ class TestController {
         "</html>\n"
 
     @ResponseBody
-    @GetMapping(value = ["/api/test-html/"], produces = [MediaType.TEXT_HTML_VALUE])
-    fun hentHTml(): String {
+    @GetMapping(value = ["/api/test/html/{fnr}/{utbetalingId}"], produces = [MediaType.TEXT_HTML_VALUE])
+    fun hentHtml(@PathVariable fnr: String, @PathVariable utbetalingId: String): String {
 
-        return html
+        return spinnsynFrontendArkiveringClient.hentVedtakSomHtml(utbetalingId = utbetalingId, fnr = fnr)
     }
 
     @ResponseBody

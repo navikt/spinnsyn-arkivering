@@ -4,5 +4,9 @@
   "team": "flex",
   "kafkaPool": "nav-dev",
   "azureTenant": "trygdeetaten.no",
-  "ingress": "https://spinnsyn-arkivering.dev.nav.no"
+  "ingress": "https://spinnsyn-arkivering.dev.nav.no",
+  "env": {
+    "SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID": "dev-gcp.flex.spinnsyn-frontend-arkivering",
+    "SPRING_PROFILES_ACTIVE": "default,testcontroller"
+  }
 }

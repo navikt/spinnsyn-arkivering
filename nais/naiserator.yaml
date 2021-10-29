@@ -49,4 +49,9 @@ spec:
     application:
       enabled: true
       tenant: {{azureTenant}}
+  env:
+  {{#each env}}
+     - name: {{@key}}
+       value: {{this}}
+  {{/each}}
 
