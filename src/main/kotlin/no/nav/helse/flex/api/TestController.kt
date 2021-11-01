@@ -29,13 +29,16 @@ class TestController(
         doc.select("link").forEach {
             if (it.hasAttr("href")) {
                 val stylesheet = URL(url + it.attr("href")).readText()
-                it.parent().append("<style>$stylesheet</style>")
+                it.parent().append("<style>\n$stylesheet\n</style>")
                 it.remove()
             } else {
                 throw RuntimeException("Style uten href")
             }
         }
         doc.select("script").forEach {
+            it.remove()
+        }
+        doc.select("meta").forEach {
             it.remove()
         }
         return doc.toString()
@@ -51,7 +54,7 @@ class TestController(
     @ResponseBody
     @GetMapping(value = ["/api/test/pdf/{fnr}/{utbetalingId}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun hentPdf(@PathVariable fnr: String, @PathVariable utbetalingId: String): ByteArray {
-        val html = hentSomHtmlOgInlineTing(fnr, utbetalingId)
+        val html = hentSomHtmlOgInlineTing(fnr, utbetalingId).replaceFirst("<!doctype html>", "")
 
         return createPDFA(html, Environment())
     }
