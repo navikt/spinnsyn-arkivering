@@ -43,6 +43,10 @@ spec:
         databases:
           - name: spinnsyn-arkivering-db
             diskAutoresize: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: spinnsyn-frontend-arkivering
   kafka:
     pool: {{kafkaPool}}
   azure:
