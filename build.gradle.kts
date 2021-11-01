@@ -65,6 +65,7 @@ dependencies {
     implementation("com.openhtmltopdf:openhtmltopdf-slf4j:$openHtmlToPdfVersion")
     implementation("com.openhtmltopdf:openhtmltopdf-svg-support:$openHtmlToPdfVersion")
     implementation("org.verapdf:validation-model:$verapdfVersion")
+    implementation("org.jsoup:jsoup:1.10.3")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:kafka:$testContainersVersion")
