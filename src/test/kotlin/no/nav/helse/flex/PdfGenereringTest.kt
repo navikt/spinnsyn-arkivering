@@ -4,8 +4,6 @@ import no.nav.helse.flex.pdfgenerering.Environment
 import no.nav.helse.flex.pdfgenerering.createPDFA
 import org.junit.jupiter.api.Test
 import org.verapdf.pdfa.VeraGreenfieldFoundryProvider
-import java.io.File
-import java.time.Instant
 
 class PdfGenereringTest {
 
@@ -28,7 +26,7 @@ class PdfGenereringTest {
     fun contextLoads() {
         VeraGreenfieldFoundryProvider.initialise()
 
-        val fil = createPDFA(html, Environment())
-        File(Instant.now().epochSecond.toString() + ".pdf").writeBytes(fil)
+        createPDFA(html, Environment())
+        //  File(Instant.now().epochSecond.toString() + ".pdf").writeBytes(fil)
     }
 }
