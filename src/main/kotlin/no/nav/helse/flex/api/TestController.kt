@@ -41,6 +41,11 @@ class TestController(
         doc.select("meta").forEach {
             it.remove()
         }
+        doc.select("svg").forEach {
+            if (!it.hasAttr("xmlns")) {
+                it.attr("xmlns", "http://www.w3.org/2000/svg")
+            }
+        }
         return doc.toString()
     }
 
