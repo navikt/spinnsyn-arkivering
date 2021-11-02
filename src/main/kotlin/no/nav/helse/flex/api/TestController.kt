@@ -5,6 +5,7 @@ import no.nav.helse.flex.pdfgenerering.Environment
 import no.nav.helse.flex.pdfgenerering.createPDFA
 import no.nav.security.token.support.core.api.Unprotected
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
 import java.net.URL
+import java.util.*
 
 @Controller
 @Unprotected
@@ -46,6 +48,16 @@ class TestController(
                 it.attr("xmlns", "http://www.w3.org/2000/svg")
             }
         }
+        doc.select("img").forEach {
+            if (it.hasAttr("src")) {
+                val img = URL(url + it.attr("src")).readBytes()
+                val b64img = Base64.getEncoder().encodeToString(img) // TODO må verifisere at det er svg og at svg har xmlns
+                it.removeAttr("src")
+                it.attr("src", "data:image/svg+xml;base64,$b64img")
+            }
+        }
+        doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml)
+
         return doc.toString()
     }
 
