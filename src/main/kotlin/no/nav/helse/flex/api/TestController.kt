@@ -49,12 +49,13 @@ class TestController(
             }
         }
         doc.select("img").forEach {
-            if (it.hasAttr("src")) {
+      /*      if (it.hasAttr("src")) {
                 val img = URL(url + it.attr("src")).readBytes()
                 val b64img = Base64.getEncoder().encodeToString(img) // TODO må verifisere at det er svg og at svg har xmlns
                 it.removeAttr("src")
                 it.attr("src", "data:image/svg+xml;base64,$b64img")
-            }
+            }*/
+            it.remove()
         }
         doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml)
 
@@ -73,6 +74,12 @@ class TestController(
     fun hentPdf(@PathVariable fnr: String, @PathVariable utbetalingId: String): ByteArray {
         val html = hentSomHtmlOgInlineTing(fnr, utbetalingId).replaceFirst("<!doctype html>", "")
 
-        return createPDFA(html, Environment())
+        val medDoctype = """
+            <!DOCTYPE html PUBLIC
+ "-//OPENHTMLTOPDF//DOC XHTML Character Entities Only 1.0//EN" "">
+ $html
+        """.trimIndent()
+
+        return createPDFA(medDoctype, Environment())
     }
 }
