@@ -65,7 +65,6 @@ class TestController(
                 it.removeAttr("src")
                 it.attr("src", "data:image/svg+xml;base64,$b64img")
             }
-            it.remove()
         }
         doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml)
 
@@ -82,14 +81,13 @@ class TestController(
     @ResponseBody
     @GetMapping(value = ["/api/test/pdf/{fnr}/{utbetalingId}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun hentPdf(@PathVariable fnr: String, @PathVariable utbetalingId: String): ByteArray {
-        val html = hentSomHtmlOgInlineTing(fnr, utbetalingId).replaceFirst("<!doctype html>", "")
-
-        val medDoctype = """
+        val nyDoctype = """
             <!DOCTYPE html PUBLIC
  "-//OPENHTMLTOPDF//DOC XHTML Character Entities Only 1.0//EN" "">
- $html
         """.trimIndent()
 
-        return createPDFA(medDoctype, Environment())
+        val html = hentSomHtmlOgInlineTing(fnr, utbetalingId).replaceFirst("<!DOCTYPE html>", nyDoctype)
+
+        return createPDFA(html, Environment())
     }
 }
