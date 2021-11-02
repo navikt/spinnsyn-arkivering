@@ -37,6 +37,16 @@ class TestController(
                 throw RuntimeException("Style uten href")
             }
         }
+        val tvungenFontStyle = """
+    <style>
+        * {
+            font-family: "Source Sans Pro" !important;
+        }
+    </style>            
+        """
+        doc.select("head").forEach {
+            it.append(tvungenFontStyle)
+        }
         doc.select("script").forEach {
             it.remove()
         }
@@ -49,12 +59,12 @@ class TestController(
             }
         }
         doc.select("img").forEach {
-      /*      if (it.hasAttr("src")) {
+            if (it.hasAttr("src")) {
                 val img = URL(url + it.attr("src")).readBytes()
                 val b64img = Base64.getEncoder().encodeToString(img) // TODO må verifisere at det er svg og at svg har xmlns
                 it.removeAttr("src")
                 it.attr("src", "data:image/svg+xml;base64,$b64img")
-            }*/
+            }
             it.remove()
         }
         doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml)
