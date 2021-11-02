@@ -1,8 +1,7 @@
 package no.nav.helse.flex.api
 
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
-import no.nav.helse.flex.pdfgenerering.Environment
-import no.nav.helse.flex.pdfgenerering.createPDFA
+import no.nav.helse.flex.pdfgenerering.PdfGenerering.createPDFA
 import no.nav.security.token.support.core.api.Unprotected
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -88,6 +87,6 @@ class TestController(
 
         val html = hentSomHtmlOgInlineTing(fnr, utbetalingId).replaceFirst("<!DOCTYPE html>", nyDoctype)
 
-        return createPDFA(html, Environment())
+        return createPDFA(html)
     }
 }
