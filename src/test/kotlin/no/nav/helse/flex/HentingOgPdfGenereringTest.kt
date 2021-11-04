@@ -35,7 +35,7 @@ class HentingOgPdfGenereringTest : Testoppsett() {
         enqueDetSomTrengs()
 
         File("pdf-tests").mkdirs()
-        val pdf = arkivaren.hentPdf("12345", "1234542")
+        val pdf = arkivaren.hentPdf(fnr, uuid)
         File("pdf-tests/" + OffsetDateTime.now().toString() + ".pdf").writeBytes(pdf)
 
         validerRequests()
@@ -51,11 +51,17 @@ class HentingOgPdfGenereringTest : Testoppsett() {
         stylesheetRequest.path `should be equal to` "/syk/sykepenger/_next/static/css/yes.css"
         stylesheetRequest.headers["fnr"].shouldBeNull()
         stylesheetRequest.headers["Authorization"].shouldBeNull()
+
+        val svgRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
+        svgRequest.path `should be equal to` "/public/ikon-skriv-til-oss.svg"
+        svgRequest.headers["fnr"].shouldBeNull()
+        svgRequest.headers["Authorization"].shouldBeNull()
     }
 
     fun enqueDetSomTrengs() {
         enqueFil("/testside.html")
         enqueFil("/stylesheet.css")
+        enqueFil("/ikon-skriv-til-oss.svg")
     }
 
     fun enqueFil(fil: String) {
