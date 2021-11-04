@@ -1,6 +1,7 @@
 package no.nav.helse.flex
 
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,6 +17,8 @@ private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>
 abstract class Testoppsett {
 
     companion object {
+        var spinnsynArkiveringFrontendMockWebServer: MockWebServer
+
         init {
             PostgreSQLContainer12().also {
                 it.start()
@@ -28,6 +31,12 @@ abstract class Testoppsett {
                 it.start()
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
+
+            spinnsynArkiveringFrontendMockWebServer = MockWebServer()
+                .also { it.start() }
+                .also {
+                    System.setProperty("spinnsyn.frontend.arkivering.url", "http://localhost:${it.port}")
+                }
         }
     }
 
