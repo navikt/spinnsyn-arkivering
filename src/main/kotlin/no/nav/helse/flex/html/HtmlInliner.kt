@@ -17,11 +17,15 @@ class HtmlInliner(
         val doc = Jsoup.parse(html)
         doc.select("link").forEach {
             if (it.hasAttr("href")) {
-                val stylesheet = URL(url + it.attr("href")).readText()
+                val href = it.attr("href")
+                if (!href.endsWith(".css")) {
+                    throw RuntimeException("Link med href som ikke er .css")
+                }
+                val stylesheet = URL(url + href).readText()
                 it.parent().append("<style>\n$stylesheet\n</style>")
                 it.remove()
             } else {
-                throw RuntimeException("Style uten href")
+                throw RuntimeException("Link uten href")
             }
         }
         val tvungenFontStyle = """
