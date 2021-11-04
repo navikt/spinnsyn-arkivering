@@ -22,7 +22,7 @@ class HtmlInliner(
                     throw RuntimeException("Link med href som ikke er .css")
                 }
                 val stylesheet = URL(url + href).readText()
-                it.parent().append("<style>\n$stylesheet\n</style>")
+                it.parent()?.append("<style>\n$stylesheet\n</style>")
                 it.remove()
             } else {
                 throw RuntimeException("Link uten href")
