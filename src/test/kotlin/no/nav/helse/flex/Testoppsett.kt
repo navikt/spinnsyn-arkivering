@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
+import org.verapdf.pdfa.VeraGreenfieldFoundryProvider
 
 private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
 
@@ -20,6 +21,8 @@ abstract class Testoppsett {
         var spinnsynArkiveringFrontendMockWebServer: MockWebServer
 
         init {
+            VeraGreenfieldFoundryProvider.initialise()
+
             PostgreSQLContainer12().also {
                 it.start()
                 System.setProperty("spring.datasource.url", it.jdbcUrl)
