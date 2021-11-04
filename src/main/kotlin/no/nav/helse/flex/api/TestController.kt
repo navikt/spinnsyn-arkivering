@@ -59,8 +59,15 @@ class TestController(
         }
         doc.select("img").forEach {
             if (it.hasAttr("src")) {
-                val img = URL(url + it.attr("src")).readBytes()
-                val b64img = Base64.getEncoder().encodeToString(img) // TODO må verifisere at det er svg og at svg har xmlns
+                val bildeUrl = url + it.attr("src")
+                if (!bildeUrl.endsWith(".svg")) {
+                    throw RuntimeException("Støtter kun svg. Kan ikke laste ned bilde $bildeUrl")
+                }
+                val img = URL(bildeUrl).readText()
+                if (!img.contains("http://www.w3.org/2000/svg")) {
+                    throw RuntimeException("$bildeUrl mangler xmlns:http://www.w3.org/2000/svg tag")
+                }
+                val b64img = Base64.getEncoder().encodeToString(img.toByteArray())
                 it.removeAttr("src")
                 it.attr("src", "data:image/svg+xml;base64,$b64img")
             }
