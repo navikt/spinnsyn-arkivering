@@ -5,6 +5,7 @@ import no.nav.helse.flex.client.domain.Bruker
 import no.nav.helse.flex.client.domain.Dokument
 import no.nav.helse.flex.client.domain.Dokumentvarianter
 import no.nav.helse.flex.client.domain.JournalpostRequest
+import no.nav.helse.flex.client.domain.Sak
 import no.nav.helse.flex.kafka.VedtakStatus
 
 fun skapJournalpostRequest(
@@ -29,6 +30,9 @@ fun skapJournalpostRequest(
                 ),
                 tittel = tittel,
             )
+        ),
+        sak = Sak(
+            sakstype = "GENERELL_SAK"
         ),
         journalfoerendeEnhet = "9999",
         eksternReferanseId = vedtakStatus.id,
