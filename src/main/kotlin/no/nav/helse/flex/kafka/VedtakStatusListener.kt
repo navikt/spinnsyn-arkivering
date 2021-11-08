@@ -1,8 +1,8 @@
 package no.nav.helse.flex.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.helse.flex.arkivering.Arkivaren
 import no.nav.helse.flex.objectMapper
-import no.nav.helse.flex.vedtak.Arkivaren
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment

@@ -1,4 +1,4 @@
-package no.nav.helse.flex.vedtak
+package no.nav.helse.flex.arkivering
 
 import no.nav.helse.flex.client.domain.AvsenderMottaker
 import no.nav.helse.flex.client.domain.Bruker

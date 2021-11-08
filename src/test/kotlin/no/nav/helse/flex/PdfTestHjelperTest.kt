@@ -1,6 +1,6 @@
 package no.nav.helse.flex
 
-import no.nav.helse.flex.vedtak.Arkivaren
+import no.nav.helse.flex.arkivering.Arkivaren
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.io.File

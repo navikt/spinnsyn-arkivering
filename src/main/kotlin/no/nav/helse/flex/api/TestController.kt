@@ -1,7 +1,7 @@
 package no.nav.helse.flex.api
 
+import no.nav.helse.flex.arkivering.Arkivaren
 import no.nav.helse.flex.config.EnvironmentToggles
-import no.nav.helse.flex.vedtak.Arkivaren
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
