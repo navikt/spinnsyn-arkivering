@@ -1,7 +1,6 @@
 package no.nav.helse.flex.api
 
-import no.nav.helse.flex.client.domain.JournalpostResponse
-import no.nav.helse.flex.kafka.VedtakStatus
+import no.nav.helse.flex.config.EnvironmentToggles
 import no.nav.helse.flex.vedtak.Arkivaren
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
@@ -16,13 +15,20 @@ import javax.servlet.http.HttpServletResponse
 @Unprotected
 @Profile("testcontroller")
 class TestController(
-    val arkivaren: Arkivaren
+    val arkivaren: Arkivaren,
+    val environmentToggles: EnvironmentToggles
 ) {
+
+    fun dobbeltsjekkProd() {
+        if (environmentToggles.isProduction()) {
+            throw RuntimeException("Disablet i produksjon")
+        }
+    }
 
     @ResponseBody
     @GetMapping(value = ["/api/test/html/{fnr}/{utbetalingId}"], produces = [MediaType.TEXT_HTML_VALUE])
     fun hentHtml(@PathVariable fnr: String, @PathVariable utbetalingId: String, response: HttpServletResponse): String {
-
+        dobbeltsjekkProd()
         val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, utbetalingId = utbetalingId)
         response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.second)
         return hentSomHtmlOgInlineTing.first
@@ -35,20 +41,10 @@ class TestController(
         @PathVariable utbetalingId: String,
         response: HttpServletResponse
     ): ByteArray {
+        dobbeltsjekkProd()
         val hentPdf = arkivaren.hentPdf(fnr = fnr, utbetalingId = utbetalingId)
         response.setHeader("x-nais-app-image", hentPdf.second)
 
         return hentPdf.first
-    }
-
-    @ResponseBody
-    @GetMapping(value = ["/api/test/arkiver-pdf/{fnr}/{utbetalingId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun arkiverPdf(
-        @PathVariable fnr: String,
-        @PathVariable utbetalingId: String,
-        response: HttpServletResponse
-    ): JournalpostResponse {
-        val hentPdf = arkivaren.arkiverVedtak(VedtakStatus(fnr = fnr, id = utbetalingId))
-        return hentPdf
     }
 }

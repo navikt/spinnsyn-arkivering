@@ -2,7 +2,7 @@ package no.nav.helse.flex.vedtak
 
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
-import no.nav.helse.flex.client.domain.JournalpostResponse
+import no.nav.helse.flex.config.EnvironmentToggles
 import no.nav.helse.flex.html.HtmlInliner
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.pdfgenerering.PdfGenerering.createPDFA
@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component
 class Arkivaren(
     val spinnsynFrontendArkiveringClient: SpinnsynFrontendArkiveringClient,
     val htmlInliner: HtmlInliner,
-    val dokArkivClient: DokArkivClient
+    val dokArkivClient: DokArkivClient,
+    val environmentToggles: EnvironmentToggles
 ) {
     fun hentSomHtmlOgInlineTing(fnr: String, utbetalingId: String): Pair<String, String> {
         val html = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(utbetalingId = utbetalingId, fnr = fnr)
@@ -35,9 +36,12 @@ class Arkivaren(
         return createPDFA(html.replaceFirst("<!DOCTYPE html>", nyDoctype))
     }
 
-    fun arkiverVedtak(vedtak: VedtakStatus): JournalpostResponse {
+    fun arkiverVedtak(vedtak: VedtakStatus) {
         val hentPdf = hentPdf(fnr = vedtak.fnr, utbetalingId = vedtak.id)
+        if (environmentToggles.isProduction()) {
+            return
+        }
         val request = skapJournalpostRequest(vedtak, hentPdf.first)
-        return dokArkivClient.opprettJournalpost(request, vedtak.id)
+        dokArkivClient.opprettJournalpost(request, vedtak.id)
     }
 }
