@@ -23,12 +23,12 @@ class VedtakStatusListener(
         acknowledgment.acknowledge()
     }
 
-    fun String.tilVedtak(): Vedtak = objectMapper.readValue(this)
+    fun String.tilVedtak(): VedtakStatus = objectMapper.readValue(this)
 }
 
 const val FLEX_VEDTAK_STATUS_TOPIC = "flex.vedtak-status"
 
-data class Vedtak(
+data class VedtakStatus(
     val id: String,
     val fnr: String,
 )
