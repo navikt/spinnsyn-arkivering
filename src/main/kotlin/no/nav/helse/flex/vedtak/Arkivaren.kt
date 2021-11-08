@@ -2,6 +2,7 @@ package no.nav.helse.flex.vedtak
 
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.html.HtmlInliner
+import no.nav.helse.flex.kafka.Vedtak
 import no.nav.helse.flex.pdfgenerering.PdfGenerering.createPDFA
 import org.springframework.stereotype.Component
 
@@ -10,24 +11,28 @@ class Arkivaren(
     val spinnsynFrontendArkiveringClient: SpinnsynFrontendArkiveringClient,
     val htmlInliner: HtmlInliner,
 ) {
-    fun hentSomHtmlOgInlineTing(fnr: String, utbetalingId: String): String {
+    fun hentSomHtmlOgInlineTing(fnr: String, utbetalingId: String): Pair<String, String> {
         val html = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(utbetalingId = utbetalingId, fnr = fnr)
-        return htmlInliner.inlineHtml(html)
+        return Pair(htmlInliner.inlineHtml(html.html), html.versjon)
     }
 
-    fun hentPdf(fnr: String, utbetalingId: String): ByteArray {
+    fun hentPdf(fnr: String, utbetalingId: String): Pair<ByteArray, String> {
 
         val html = hentSomHtmlOgInlineTing(fnr, utbetalingId)
 
-        return hentPdfFraHTml(html)
+        return Pair(hentPdfFraHtml(html.first), html.second)
     }
 
-    fun hentPdfFraHTml(html: String): ByteArray {
+    fun hentPdfFraHtml(html: String): ByteArray {
         val nyDoctype = """
             <!DOCTYPE html PUBLIC
  "-//OPENHTMLTOPDF//DOC XHTML Character Entities Only 1.0//EN" "">
         """.trimIndent()
 
         return createPDFA(html.replaceFirst("<!DOCTYPE html>", nyDoctype))
+    }
+
+    fun arkiverVedtak(vedtak: Vedtak) {
+        hentPdf(fnr = vedtak.fnr, utbetalingId = vedtak.id)
     }
 }

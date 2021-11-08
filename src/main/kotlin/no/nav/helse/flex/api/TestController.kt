@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
+import javax.servlet.http.HttpServletResponse
 
 @Controller
 @Unprotected
@@ -18,14 +19,23 @@ class TestController(
 
     @ResponseBody
     @GetMapping(value = ["/api/test/html/{fnr}/{utbetalingId}"], produces = [MediaType.TEXT_HTML_VALUE])
-    fun hentHtml(@PathVariable fnr: String, @PathVariable utbetalingId: String): String {
+    fun hentHtml(@PathVariable fnr: String, @PathVariable utbetalingId: String, response: HttpServletResponse): String {
 
-        return arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, utbetalingId = utbetalingId)
+        val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, utbetalingId = utbetalingId)
+        response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.second)
+        return hentSomHtmlOgInlineTing.first
     }
 
     @ResponseBody
     @GetMapping(value = ["/api/test/pdf/{fnr}/{utbetalingId}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun hentPdf(@PathVariable fnr: String, @PathVariable utbetalingId: String): ByteArray {
-        return arkivaren.hentPdf(fnr = fnr, utbetalingId = utbetalingId)
+    fun hentPdf(
+        @PathVariable fnr: String,
+        @PathVariable utbetalingId: String,
+        response: HttpServletResponse
+    ): ByteArray {
+        val hentPdf = arkivaren.hentPdf(fnr = fnr, utbetalingId = utbetalingId)
+        response.setHeader("x-nais-app-image", hentPdf.second)
+
+        return hentPdf.first
     }
 }

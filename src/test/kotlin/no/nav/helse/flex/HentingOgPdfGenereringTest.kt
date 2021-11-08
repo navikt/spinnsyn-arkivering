@@ -25,7 +25,7 @@ class HentingOgPdfGenereringTest : Testoppsett() {
 
         val html = arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
         val forventetHtml = HentingOgPdfGenereringTest::class.java.getResource("/forventet.html").readText()
-        html `should be equal to ignoring whitespace` forventetHtml
+        html.first `should be equal to ignoring whitespace` forventetHtml
 
         validerRequests()
     }
@@ -36,7 +36,7 @@ class HentingOgPdfGenereringTest : Testoppsett() {
 
         File("pdf-tests").mkdirs()
         val pdf = arkivaren.hentPdf(fnr, uuid)
-        File("pdf-tests/" + OffsetDateTime.now().toString() + ".pdf").writeBytes(pdf)
+        File("pdf-tests/" + OffsetDateTime.now().toString() + ".pdf").writeBytes(pdf.first)
 
         validerRequests()
     }

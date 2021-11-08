@@ -29,7 +29,7 @@ no.nav.security.jwt:
 
 
 aiven-kafka:
-  auto-offset-reset: none
+  auto-offset-reset: latest #TODO NONE
   security-protocol: SSL
 
 management:
