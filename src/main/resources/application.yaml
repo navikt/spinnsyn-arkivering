@@ -49,3 +49,4 @@ management:
 
 logging.config: "classpath:logback.xml"
 spinnsyn.frontend.arkivering.url: "http://spinnsyn-frontend-arkivering"
+nais.cluster: ${NAIS_CLUSTER_NAME}
