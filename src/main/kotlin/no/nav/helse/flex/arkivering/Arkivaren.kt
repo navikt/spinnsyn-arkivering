@@ -4,6 +4,7 @@ import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.html.HtmlInliner
+import no.nav.helse.flex.kafka.VedtakArkiveringDTO
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.kafka.VedtakStatusDto
 import no.nav.helse.flex.logger
@@ -24,6 +25,8 @@ class Arkivaren(
     @Value("\${nais.app.image}")
     val naisAppImage: String
 ) {
+
+    val log = logger()
 
     val norskDato: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
@@ -61,40 +64,47 @@ class Arkivaren(
         return createPDFA(html.replaceFirst("<!DOCTYPE html>", nyDoctype))
     }
 
-    fun arkiverVedtak(vedtak: VedtakStatusDto): Int {
-        val log = logger()
+    fun arkiverUarkivertVedtak(vedtak: VedtakArkiveringDTO): Int {
+        return lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
+    }
 
+    fun arkiverVedtak(vedtak: VedtakStatusDto): Int {
         if (vedtak.vedtakStatus != VedtakStatus.MOTATT) {
             return 0
         }
+        return lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
+    }
 
-        if (arkivertVedtakRepository.existsByVedtakId(vedtak.id)) {
-            log.warn("Vedtak ${vedtak.id} er allerede arkivert")
+    private fun lagreJournalpost(fnr: String, id: String): Int {
+        if (arkivertVedtakRepository.existsByVedtakId(id)) {
+            log.warn("Vedtak $id er allerede arkivert")
             return 0
         }
 
-        val vedtaket = hentPdf(fnr = vedtak.fnr, utbetalingId = vedtak.id)
+        val vedtaket = hentPdf(fnr = fnr, utbetalingId = id)
 
-        val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} til ${vedtaket.tom.format(norskDato)}"
-        val request = skapJournalpostRequest(vedtak, vedtaket.pdf, tittel)
-        val journalpostResponse = dokArkivClient.opprettJournalpost(request, vedtak.id)
+        val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} til ${
+        vedtaket.tom.format(norskDato)
+        }"
+        val request = skapJournalpostRequest(fnr, id, vedtaket.pdf, tittel)
+        val journalpostResponse = dokArkivClient.opprettJournalpost(request, id)
 
         if (!journalpostResponse.journalpostferdigstilt) {
-            log.warn("Journalpost ${journalpostResponse.journalpostId} for vedtak ${vedtak.id} ble ikke ferdigstilt")
+            log.warn("Journalpost ${journalpostResponse.journalpostId} for vedtak $id ble ikke ferdigstilt")
         }
 
         arkivertVedtakRepository.save(
             ArkivertVedtak(
                 id = null,
-                fnr = vedtak.fnr,
-                vedtakId = vedtak.id,
+                fnr = fnr,
+                vedtakId = id,
                 journalpostId = journalpostResponse.journalpostId,
                 opprettet = Instant.now(),
                 spinnsynArkiveringImage = naisAppImage,
                 spinnsynFrontendImage = vedtaket.versjon
             )
         )
-        log.info("Arkiverte vedtak ${vedtak.id}")
+        log.info("Arkiverte vedtak $id")
         registry.counter("vedtak_arkivert").increment()
         return 1
     }

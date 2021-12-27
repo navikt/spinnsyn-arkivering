@@ -3,7 +3,9 @@ package no.nav.helse.flex
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.JournalpostResponse
+import no.nav.helse.flex.kafka.FLEX_VEDTAK_ARKIVERING_TOPIC
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_STATUS_TOPIC
+import no.nav.helse.flex.kafka.VedtakArkiveringDTO
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.kafka.VedtakStatusDto
 import okhttp3.mockwebserver.MockResponse
@@ -23,7 +25,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class IntegrasjonTest : Testoppsett() {
+class UarkiverteIntegrasjonsTest : Testoppsett() {
 
     @Autowired
     lateinit var kafkaProducer: KafkaProducer<String, String>
@@ -48,10 +50,10 @@ class IntegrasjonTest : Testoppsett() {
 
         kafkaProducer.send(
             ProducerRecord(
-                FLEX_VEDTAK_STATUS_TOPIC,
+                FLEX_VEDTAK_ARKIVERING_TOPIC,
                 null,
                 fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString()
+                VedtakArkiveringDTO(fnr = fnr, id = vedtakId,).serialisertTilString()
             )
         ).get()
 
@@ -65,8 +67,7 @@ class IntegrasjonTest : Testoppsett() {
         journalfoeringRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
         journalfoeringRequest.headers["Nav-Callid"] `should be equal to` vedtakId
 
-        val jpostRequest: JournalpostRequest =
-            objectMapper.readValue(journalfoeringRequest.body.readString(Charset.defaultCharset()))
+        val jpostRequest: JournalpostRequest = objectMapper.readValue(journalfoeringRequest.body.readString(Charset.defaultCharset()))
         jpostRequest.tittel `should be equal to` "Svar på søknad om sykepenger for periode: 12.03.2020 til 30.04.2020"
 
         val arkivertVedtak = arkivertVedtakRepository.findAll().first { it.vedtakId == vedtakId }
@@ -89,25 +90,6 @@ class IntegrasjonTest : Testoppsett() {
                 null,
                 fnr,
                 VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString()
-            )
-        ).get()
-
-        await().during(5, TimeUnit.SECONDS).until {
-            arkivertVedtakRepository.count() == 1L
-        }
-    }
-
-    @Test
-    @Order(3)
-    fun `mottar et vedtak som ikke har status LEST som ikke arkiveres`() {
-
-        arkivertVedtakRepository.count() `should be equal to` 1L
-        kafkaProducer.send(
-            ProducerRecord(
-                FLEX_VEDTAK_STATUS_TOPIC,
-                null,
-                fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.LEST).serialisertTilString()
             )
         ).get()
 
