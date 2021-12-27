@@ -30,8 +30,8 @@ class Arkivaren(
 
     val norskDato: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
-    fun hentSomHtmlOgInlineTing(fnr: String, utbetalingId: String): SpinnsynFrontendArkiveringClient.HtmlVedtak {
-        val htmlVedtak = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(utbetalingId = utbetalingId, fnr = fnr)
+    fun hentSomHtmlOgInlineTing(fnr: String, id: String): SpinnsynFrontendArkiveringClient.HtmlVedtak {
+        val htmlVedtak = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(fnr = fnr, id = id)
         return htmlVedtak.copy(html = htmlInliner.inlineHtml(htmlVedtak.html))
     }
 
@@ -42,9 +42,8 @@ class Arkivaren(
         val tom: LocalDate,
     )
 
-    fun hentPdf(fnr: String, utbetalingId: String): PdfVedtak {
-
-        val html = hentSomHtmlOgInlineTing(fnr, utbetalingId)
+    fun hentPdf(fnr: String, id: String): PdfVedtak {
+        val html = hentSomHtmlOgInlineTing(fnr = fnr, id = id)
 
         val pdf = hentPdfFraHtml(html.html)
         return PdfVedtak(
@@ -65,7 +64,13 @@ class Arkivaren(
     }
 
     fun arkiverUarkivertVedtak(vedtak: VedtakArkiveringDTO): Int {
-        return lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
+        // Sikrer at Kafka-melding blir ack'et uansett feil.
+        return try {
+            lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
+        } catch (e: RuntimeException) {
+            log.warn("Feil ved arkivering av uarkivert vedtak: ${e.message}")
+            0
+        }
     }
 
     fun arkiverVedtak(vedtak: VedtakStatusDto): Int {
@@ -77,15 +82,14 @@ class Arkivaren(
 
     private fun lagreJournalpost(fnr: String, id: String): Int {
         if (arkivertVedtakRepository.existsByVedtakId(id)) {
-            log.warn("Vedtak $id er allerede arkivert")
+            log.warn("Vedtak med $id er allerede arkivert")
             return 0
         }
 
-        val vedtaket = hentPdf(fnr = fnr, utbetalingId = id)
+        val vedtaket = hentPdf(fnr = fnr, id = id)
 
-        val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} til ${
-        vedtaket.tom.format(norskDato)
-        }"
+        val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} " +
+            "til ${vedtaket.tom.format(norskDato)}"
         val request = skapJournalpostRequest(fnr, id, vedtaket.pdf, tittel)
         val journalpostResponse = dokArkivClient.opprettJournalpost(request, id)
 
