@@ -2,6 +2,7 @@ package no.nav.helse.flex.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.arkivering.Arkivaren
+import no.nav.helse.flex.logger
 import no.nav.helse.flex.objectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
@@ -15,7 +16,8 @@ class ArkiveringListener(
 
     @KafkaListener(
         topics = [FLEX_VEDTAK_ARKIVERING_TOPIC],
-        containerFactory = "aivenKafkaListenerContainerFactory"
+        containerFactory = "aivenKafkaListenerContainerFactory",
+        properties = ["auto.offset.reset = earliest"],
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val uarkivertVedtak = cr.value().tilUarkivertVedtak()
