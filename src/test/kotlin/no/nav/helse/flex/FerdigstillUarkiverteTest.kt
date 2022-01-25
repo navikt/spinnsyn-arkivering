@@ -1,23 +1,23 @@
 package no.nav.helse.flex
 
+import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_ARKIVERING_TOPIC
-import no.nav.helse.flex.uarkiverte.SpinnsynBackendRestClient
 import no.nav.helse.flex.uarkiverte.SpinnsynBackendRestClient.RSVedtakWrapper
 import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldStartWith
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import java.nio.charset.Charset
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDate
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class FerdigstillUarkiverteTest() : Testoppsett() {
 
@@ -32,13 +32,16 @@ class FerdigstillUarkiverteTest() : Testoppsett() {
         val vedtakId = "vedtak-1"
         val fnr = "fnr-1"
         val journalpostId = "journalpost-1"
+        val opprettetDato = LocalDate.of(2022, 5, 1)
 
         opprettArkivertVedtak(vedtakId, fnr, journalpostId)
 
-        val spinnsynBackendResponse = listOf(RSVedtakWrapper(id = vedtakId, opprettet = LocalDate.now()))
-
+        val spinnsynBackendResponse = listOf(RSVedtakWrapper(id = vedtakId, opprettet = opprettetDato))
         val mockResponse = MockResponse().setBody(spinnsynBackendResponse.serialisertTilString())
         spinnsynBackendMockWebServer.enqueue(mockResponse)
+
+        val dokarkivResponse = MockResponse().setResponseCode(200)
+        dokarkivMockWebServer.enqueue(dokarkivResponse)
 
         kafkaProducer.send(
             ProducerRecord(
@@ -55,9 +58,16 @@ class FerdigstillUarkiverteTest() : Testoppsett() {
         htmlRequest.headers["fnr"] `should be equal to` fnr
         htmlRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
 
-        await().atMost(10, TimeUnit.SECONDS)
+        val dokarkivRequest = dokarkivMockWebServer.takeRequest()
+        dokarkivRequest.path `should be equal to` "/rest/journalpostapi/v1/journalpost/$journalpostId/ferdigstill"
+        dokarkivRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
 
-        // TODO: 2 - Verifiser at Arkivet blir kallt
+        val journalpostRequestBody: FerdigstillJournalpostRequest =
+            objectMapper.readValue(dokarkivRequest.body.readString(Charset.defaultCharset()))
+
+        journalpostRequestBody.datoJournal `should be equal to` opprettetDato
+        journalpostRequestBody.journalfoerendeEnhet `should be equal to` "9999"
+        journalpostRequestBody.journalpostId `should be equal to` journalpostId
     }
 
     private fun opprettArkivertVedtak(vedtakId: String, fnr: String, journalpostId: String) {

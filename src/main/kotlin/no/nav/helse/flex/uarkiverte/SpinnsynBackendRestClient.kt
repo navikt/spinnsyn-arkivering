@@ -1,6 +1,5 @@
 package no.nav.helse.flex.uarkiverte
 
-import no.nav.helse.flex.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders

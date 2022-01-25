@@ -50,7 +50,6 @@ class DokArkivClient(
         val httpEntity = HttpEntity(request, headers)
 
         val result = dokarkivRestTemplate.exchange(url, HttpMethod.PATCH, httpEntity, Void::class.java)
-
         if (!result.statusCode.is2xxSuccessful) {
             throw RuntimeException(
                 "Ferdigstilling av journalpost feiler med HTTP-${result.statusCode} ${result.statusCodeValue} for " +
