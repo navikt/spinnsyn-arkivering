@@ -1,5 +1,6 @@
 package no.nav.helse.flex.uarkiverte
 
+import no.nav.helse.flex.arkivering.ArkivertVedtakRepository
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
@@ -8,7 +9,8 @@ import java.time.LocalDateTime
 
 @Service
 class FerdigstillArkiverteService(
-    private val dokArkivClient: DokArkivClient
+    private val dokArkivClient: DokArkivClient,
+    private val arkivertVedtakRepository: ArkivertVedtakRepository,
 ) {
 
     fun ferdigstillArkivertVedtak(arkivertVedtakDto: ArkivertVedtakDto) {
@@ -25,11 +27,10 @@ class FerdigstillArkiverteService(
     }
 
     private fun finnJournalPostId(id: String): String {
-        TODO("Not yet implemented")
+        return arkivertVedtakRepository.getByVedtakId(id).journalpostId
     }
 
     private fun hentOpprettetDato(fnr: String, id: String): LocalDateTime {
         TODO("Not yet implemented")
     }
-
 }
