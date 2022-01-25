@@ -4,6 +4,7 @@ import no.nav.helse.flex.arkivering.ArkivertVedtakRepository
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
+import no.nav.helse.flex.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -14,8 +15,12 @@ class FerdigstillArkiverteService(
     private val spinnsynClient: SpinnsynBackendRestClient,
 ) {
 
+    private val log = logger()
+
     fun ferdigstillArkivertVedtak(vedtakDto: ArkivertVedtakDto) {
         val journalPostId = hentJournalPostId(vedtakDto.id)
+        log.info("Hentet journalpostId: $journalPostId for vedtakId ${vedtakDto.id}")
+        /*
         val datoJournal = hentOpprettetDato(vedtakDto.id, vedtakDto.id)
         val vedtakId = vedtakDto.id
 
@@ -25,6 +30,7 @@ class FerdigstillArkiverteService(
             datoJournal = datoJournal
         )
         dokArkivClient.ferdigstillJournalpost(request = request, vedtakId = vedtakId)
+         */
     }
 
     private fun hentJournalPostId(id: String): String {
