@@ -1,5 +1,6 @@
 package no.nav.helse.flex.client
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.JournalpostResponse
 import org.springframework.beans.factory.annotation.Value
@@ -11,6 +12,7 @@ import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Controller
 import org.springframework.web.client.RestTemplate
+import java.time.LocalDateTime
 
 @Controller
 class DokArkivClient(
@@ -19,22 +21,49 @@ class DokArkivClient(
 ) {
 
     @Retryable(backoff = Backoff(delay = 5000))
-    fun opprettJournalpost(pdfRequest: JournalpostRequest, id: String): JournalpostResponse {
+    fun opprettJournalpost(pdfRequest: JournalpostRequest, vedtakId: String): JournalpostResponse {
         val url = "$dokarkivUrl/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true"
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers["Nav-Callid"] = id
+        headers["Nav-Callid"] = vedtakId
 
         val entity = HttpEntity(pdfRequest, headers)
 
         val result = dokarkivRestTemplate.exchange(url, HttpMethod.POST, entity, JournalpostResponse::class.java)
 
         if (!result.statusCode.is2xxSuccessful) {
-            throw RuntimeException("dokarkiv feiler med HTTP-${result.statusCode} for vedtak med id: $id")
+            throw RuntimeException("dokarkiv feiler med HTTP-${result.statusCode} for vedtak med id: $vedtakId")
         }
 
         return result.body
-            ?: throw RuntimeException("dokarkiv returnerer ikke data for vedtak med id: $id")
+            ?: throw RuntimeException("dokarkiv returnerer ikke data for vedtak med id: $vedtakId")
+    }
+
+    @Retryable(backoff = Backoff(delay = 5000))
+    fun ferdigstillJournalpost(request: FerdigstillJournalpostRequest, vedtakId: String) {
+        val url = "$dokarkivUrl/rest/journalpostapi/v1/journalpost/${request.journalpostId}/ferdigstill"
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val httpEntity = HttpEntity(request, headers)
+
+        val result = dokarkivRestTemplate.exchange(url, HttpMethod.PATCH, httpEntity, Void::class.java)
+
+        if (!result.statusCode.is2xxSuccessful) {
+            throw RuntimeException(
+                "Ferdigstilling av journalpost feiler med HTTP-${result.statusCode} ${result.statusCodeValue} for " +
+                    "vedtak med id: $vedtakId og journalpostId: ${request.journalpostId}."
+            )
+        }
     }
 }
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class FerdigstillJournalpostRequest(
+    val journalfoerendeEnhet: String,
+    val journalpostId: String,
+    val datoJournal: LocalDateTime
+)
+
