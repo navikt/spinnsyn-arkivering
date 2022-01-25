@@ -19,9 +19,12 @@ class FerdigstillArkiverteService(
 
     fun ferdigstillArkivertVedtak(vedtakDto: ArkivertVedtakDto) {
         val journalPostId = hentJournalPostId(vedtakDto.id)
-        log.info("Hentet journalpostId: $journalPostId for vedtakId ${vedtakDto.id}")
+        log.info("Hentet journalpostId: $journalPostId for vedtakId ${vedtakDto.id}.")
+
+        val datoJournal = hentOpprettetDato(vedtakDto.fnr, vedtakDto.id)
+        log.info("Hentet datoJournal: $datoJournal for vedtakId ${vedtakDto.id} fra spinnsyn-backend.")
+
         /*
-        val datoJournal = hentOpprettetDato(vedtakDto.id, vedtakDto.id)
         val vedtakId = vedtakDto.id
 
         val request = FerdigstillJournalpostRequest(

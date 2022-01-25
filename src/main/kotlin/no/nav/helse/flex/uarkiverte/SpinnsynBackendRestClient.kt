@@ -1,6 +1,6 @@
 package no.nav.helse.flex.uarkiverte
 
-import no.nav.helse.flex.client.VedtakIkkeFunnetException
+import no.nav.helse.flex.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -35,7 +35,7 @@ class SpinnsynBackendRestClient(
             ?: throw TomVedtaksListeException("Spinnsyn Backend returnerte ingen vedtak.")
     }
 
-    private data class RSVedtakWrapper(
+    data class RSVedtakWrapper(
         val id: String,
         val opprettet: LocalDate,
     )
