@@ -5,7 +5,7 @@ import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import org.springframework.stereotype.Service
- import java.time.LocalDate
+import java.time.LocalDate
 
 @Service
 class FerdigstillArkiverteService(
