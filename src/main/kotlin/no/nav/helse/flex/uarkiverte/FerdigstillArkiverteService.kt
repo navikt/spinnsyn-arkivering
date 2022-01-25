@@ -5,18 +5,19 @@ import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+ import java.time.LocalDate
 
 @Service
 class FerdigstillArkiverteService(
     private val dokArkivClient: DokArkivClient,
-    private val arkivertVedtakRepository: ArkivertVedtakRepository,
+    private val arkivertRepository: ArkivertVedtakRepository,
+    private val spinnsynClient: SpinnsynBackendRestClient,
 ) {
 
-    fun ferdigstillArkivertVedtak(arkivertVedtakDto: ArkivertVedtakDto) {
-        val journalPostId = finnJournalPostId(arkivertVedtakDto.id)
-        val datoJournal = hentOpprettetDato(arkivertVedtakDto.id, arkivertVedtakDto.id)
-        val vedtakId = arkivertVedtakDto.id
+    fun ferdigstillArkivertVedtak(vedtakDto: ArkivertVedtakDto) {
+        val journalPostId = hentJournalPostId(vedtakDto.id)
+        val datoJournal = hentOpprettetDato(vedtakDto.id, vedtakDto.id)
+        val vedtakId = vedtakDto.id
 
         val request = FerdigstillJournalpostRequest(
             journalfoerendeEnhet = "9999",
@@ -26,11 +27,11 @@ class FerdigstillArkiverteService(
         dokArkivClient.ferdigstillJournalpost(request = request, vedtakId = vedtakId)
     }
 
-    private fun finnJournalPostId(id: String): String {
-        return arkivertVedtakRepository.getByVedtakId(id).journalpostId
+    private fun hentJournalPostId(id: String): String {
+        return arkivertRepository.getByVedtakId(id).journalpostId
     }
 
-    private fun hentOpprettetDato(fnr: String, id: String): LocalDateTime {
-        TODO("Not yet implemented")
+    private fun hentOpprettetDato(fnr: String, id: String): LocalDate {
+        return spinnsynClient.hentVedtak(fnr).first { vedtak -> vedtak.id == id }.opprettet
     }
 }
