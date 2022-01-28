@@ -5,6 +5,7 @@ import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import no.nav.helse.flex.logger
+import org.springframework.dao.DataAccessException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -17,8 +18,13 @@ class FerdigstillArkiverteService(
 
     private val log = logger()
 
-    fun ferdigstillArkivertVedtak(vedtakDto: ArkivertVedtakDto) {
-        val journalPostId = hentJournalPostId(vedtakDto.id)
+    fun ferdigstillVedtak(vedtakDto: ArkivertVedtakDto) {
+        hentJournalPostId(vedtakDto.id)?.let { ferdigstillArkivertVedtak(it, vedtakDto) }
+        log.info("Fant ikke vedtak med id: ${vedtakDto.id} i databasen med arkiverte vedtak. Avbryter ferdigstilling.")
+        return
+    }
+
+    private fun ferdigstillArkivertVedtak(journalPostId: String, vedtakDto: ArkivertVedtakDto) {
         val datoJournal = hentOpprettetDato(vedtakDto.fnr, vedtakDto.id)
 
         val request = FerdigstillJournalpostRequest(
@@ -31,8 +37,12 @@ class FerdigstillArkiverteService(
         log.info("Ferdigstilt vedtak med id: ${vedtakDto.id}, journalpostId: $journalPostId og datoJournal: $datoJournal.")
     }
 
-    private fun hentJournalPostId(id: String): String {
-        return arkivertRepository.getByVedtakId(id).journalpostId
+    private fun hentJournalPostId(id: String): String? {
+        return try {
+            arkivertRepository.getByVedtakId(id).journalpostId
+        } catch (e: DataAccessException) {
+            null
+        }
     }
 
     private fun hentOpprettetDato(fnr: String, id: String): LocalDate {

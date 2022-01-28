@@ -28,7 +28,7 @@ class ArkiveringListener(
             "Lest vedtak med id: ${arkivertVedtakDto.id} fra topic: $FLEX_VEDTAK_ARKIVERING_TOPIC, " +
                 "partisjon: ${cr.partition()} og offset: ${cr.offset()}."
         )
-        ferdigstillArkiverteService.ferdigstillArkivertVedtak(arkivertVedtakDto)
+        ferdigstillArkiverteService.ferdigstillVedtak(arkivertVedtakDto)
         acknowledgment.acknowledge()
     }
 

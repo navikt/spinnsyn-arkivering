@@ -36,6 +36,7 @@ val kluentVersion = "1.68"
 val openHtmlToPdfVersion = "1.0.10"
 val verapdfVersion = "1.18.8"
 val jsoupVersion = "1.14.3"
+val mockitoKotlinVersion = "2.2.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -70,6 +71,7 @@ dependencies {
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("org.awaitility:awaitility")
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {

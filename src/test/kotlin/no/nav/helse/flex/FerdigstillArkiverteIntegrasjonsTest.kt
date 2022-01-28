@@ -4,12 +4,17 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_ARKIVERING_TOPIC
+import no.nav.helse.flex.kafka.hentRecords
+import no.nav.helse.flex.kafka.lyttPaaTopic
 import no.nav.helse.flex.uarkiverte.SpinnsynBackendRestClient.RSVedtakWrapper
 import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.`should be equal to`
+import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldStartWith
+import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -19,13 +24,19 @@ import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
-class FerdigstillUarkiverteTest() : Testoppsett() {
+class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
 
     @Autowired
     lateinit var kafkaProducer: KafkaProducer<String, String>
 
-    private val vedtakId = UUID.randomUUID().toString()
-    private val fnr = "12345678987"
+    @Autowired
+    private lateinit var uarkiverteKafkaConsumer: Consumer<String, String>
+
+    @BeforeAll
+    fun subscribeTilTopic() {
+        uarkiverteKafkaConsumer.lyttPaaTopic(FLEX_VEDTAK_ARKIVERING_TOPIC)
+        uarkiverteKafkaConsumer.hentRecords().shouldBeEmpty()
+    }
 
     @Test
     fun `Arkivert vedtak blir ferdigstilt`() {
@@ -68,6 +79,8 @@ class FerdigstillUarkiverteTest() : Testoppsett() {
         journalpostRequestBody.datoJournal `should be equal to` opprettetDato
         journalpostRequestBody.journalfoerendeEnhet `should be equal to` "9999"
         journalpostRequestBody.journalpostId `should be equal to` journalpostId
+
+        dokarkivMockWebServer.requestCount `should be equal to` 1
     }
 
     private fun opprettArkivertVedtak(vedtakId: String, fnr: String, journalpostId: String) {
