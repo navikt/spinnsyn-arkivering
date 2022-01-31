@@ -19,9 +19,13 @@ class FerdigstillArkiverteService(
     private val log = logger()
 
     fun ferdigstillVedtak(vedtakDto: ArkivertVedtakDto) {
-        hentJournalPostId(vedtakDto.id)?.let { ferdigstillArkivertVedtak(it, vedtakDto) }
-        log.info("Fant ikke vedtak med id: ${vedtakDto.id} i databasen med arkiverte vedtak. Avbryter ferdigstilling.")
-        return
+        val journalPostId = hentJournalPostId(vedtakDto.id)
+
+        if (journalPostId != null) {
+            ferdigstillArkivertVedtak(journalPostId, vedtakDto)
+        } else {
+            log.info("Fant ikke vedtak med id: ${vedtakDto.id} i databasen med arkiverte vedtak. Avbryter ferdigstilling.")
+        }
     }
 
     private fun ferdigstillArkivertVedtak(journalPostId: String, vedtakDto: ArkivertVedtakDto) {

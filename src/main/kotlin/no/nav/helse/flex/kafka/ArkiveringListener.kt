@@ -20,15 +20,24 @@ class ArkiveringListener(
         topics = [FLEX_VEDTAK_ARKIVERING_TOPIC],
         containerFactory = "aivenKafkaListenerContainerFactory",
         properties = ["auto.offset.reset = earliest"],
-        groupId = "spinnsyn-arkivering-ferdigstilling"
+        groupId = "spinnsyn-arkivering-ferdigstill"
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val arkivertVedtakDto = cr.value().tilArkivertVedtakDto()
-        log.info(
-            "Lest vedtak med id: ${arkivertVedtakDto.id} fra topic: $FLEX_VEDTAK_ARKIVERING_TOPIC, " +
-                "partisjon: ${cr.partition()} og offset: ${cr.offset()}."
+
+        val ferdigstillVedtak = setOf(
+            "88804146-28ee-30d9-b0a3-a904919c7a37",
+            "557080c1-5c9d-31d9-a549-153d6d3f31bb",
+            "9b6ed755-aa9a-3463-b3fa-3f70e0a820e1"
         )
-        ferdigstillArkiverteService.ferdigstillVedtak(arkivertVedtakDto)
+
+        if (ferdigstillVedtak.contains(arkivertVedtakDto.id)) {
+            log.info(
+                "Lest vedtak med id: ${arkivertVedtakDto.id} fra topic: $FLEX_VEDTAK_ARKIVERING_TOPIC, " +
+                    "partisjon: ${cr.partition()} og offset: ${cr.offset()}."
+            )
+            ferdigstillArkiverteService.ferdigstillVedtak(arkivertVedtakDto)
+        }
         acknowledgment.acknowledge()
     }
 

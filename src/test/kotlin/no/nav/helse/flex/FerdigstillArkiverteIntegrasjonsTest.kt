@@ -40,7 +40,7 @@ class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
 
     @Test
     fun `Arkivert vedtak blir ferdigstilt`() {
-        val vedtakId = "vedtak-1"
+        val vedtakId = "88804146-28ee-30d9-b0a3-a904919c7a37"
         val fnr = "fnr-1"
         val journalpostId = "journalpost-1"
         val opprettetDato = LocalDate.of(2022, 5, 1)
