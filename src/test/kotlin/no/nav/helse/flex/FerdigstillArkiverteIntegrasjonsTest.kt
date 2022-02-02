@@ -78,7 +78,6 @@ class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
 
         journalpostRequestBody.datoJournal `should be equal to` opprettetDato
         journalpostRequestBody.journalfoerendeEnhet `should be equal to` "9999"
-        journalpostRequestBody.journalpostId `should be equal to` journalpostId
 
         dokarkivMockWebServer.requestCount `should be equal to` 1
     }

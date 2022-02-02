@@ -28,17 +28,20 @@ class FerdigstillArkiverteService(
         }
     }
 
-    private fun ferdigstillArkivertVedtak(journalPostId: String, vedtakDto: ArkivertVedtakDto) {
+    private fun ferdigstillArkivertVedtak(journalpostId: String, vedtakDto: ArkivertVedtakDto) {
         val datoJournal = hentOpprettetDato(vedtakDto.fnr, vedtakDto.id)
 
-        val request = FerdigstillJournalpostRequest(
+        val journalpostRequest = FerdigstillJournalpostRequest(
             journalfoerendeEnhet = "9999",
-            journalpostId = journalPostId,
             datoJournal = datoJournal
         )
-        dokArkivClient.ferdigstillJournalpost(request = request, vedtakId = vedtakDto.id)
+        dokArkivClient.ferdigstillJournalpost(
+            journalpostId = journalpostId,
+            journalpostRequest = journalpostRequest,
+            vedtakId = vedtakDto.id
+        )
 
-        log.info("Ferdigstilt vedtak med id: ${vedtakDto.id}, journalpostId: $journalPostId og datoJournal: $datoJournal.")
+        log.info("Ferdigstilt vedtak med id: ${vedtakDto.id}, journalpostId: $journalpostId og datoJournal: $datoJournal.")
     }
 
     private fun hentJournalPostId(id: String): String? {

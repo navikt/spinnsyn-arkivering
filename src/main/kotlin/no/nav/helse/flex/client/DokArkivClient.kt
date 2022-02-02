@@ -41,19 +41,23 @@ class DokArkivClient(
     }
 
     @Retryable(backoff = Backoff(delay = 5000))
-    fun ferdigstillJournalpost(request: FerdigstillJournalpostRequest, vedtakId: String) {
-        val url = "$dokarkivUrl/rest/journalpostapi/v1/journalpost/${request.journalpostId}/ferdigstill"
+    fun ferdigstillJournalpost(
+        journalpostId: String,
+        journalpostRequest: FerdigstillJournalpostRequest,
+        vedtakId: String
+    ) {
+        val url = "$dokarkivUrl/rest/journalpostapi/v1/journalpost/$journalpostId/ferdigstill"
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val httpEntity = HttpEntity(request, headers)
+        val httpEntity = HttpEntity(journalpostRequest, headers)
 
         val result = dokarkivRestTemplate.exchange(url, HttpMethod.PATCH, httpEntity, Void::class.java)
         if (!result.statusCode.is2xxSuccessful) {
             throw RuntimeException(
                 "Ferdigstilling av journalpost feiler med HTTP-${result.statusCode} ${result.statusCodeValue} for " +
-                    "vedtak med id: $vedtakId og journalpostId: ${request.journalpostId}."
+                    "vedtak med id: $vedtakId og journalpostId: $journalpostId."
             )
         }
     }
@@ -62,6 +66,5 @@ class DokArkivClient(
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class FerdigstillJournalpostRequest(
     val journalfoerendeEnhet: String,
-    val journalpostId: String,
     val datoJournal: LocalDate
 )
