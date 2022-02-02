@@ -12,6 +12,7 @@ import org.springframework.http.HttpRequest
 import org.springframework.http.MediaType
 import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 
@@ -38,13 +39,18 @@ class AadRestTemplateConfiguration {
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,
         oAuth2AccessTokenService: OAuth2AccessTokenService
-    ): RestTemplate =
-        downstreamRestTemplate(
+    ): RestTemplate {
+        val restTemplate = downstreamRestTemplate(
             registrationName = "dokarkiv-client-credentials",
             restTemplateBuilder = restTemplateBuilder,
             clientConfigurationProperties = clientConfigurationProperties,
             oAuth2AccessTokenService = oAuth2AccessTokenService,
         )
+        // Bruker OkHttp til requests for å støtte PATCH.
+        val requestFactory = OkHttp3ClientHttpRequestFactory()
+        restTemplate.requestFactory = requestFactory
+        return restTemplate
+    }
 
     @Bean
     fun spinnsynBackendRestTemplate(

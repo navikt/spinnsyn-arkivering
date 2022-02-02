@@ -19,8 +19,6 @@ buildscript {
     }
 }
 
-ext["okhttp3.version"] = "4.9.0" // For at tester som bruker MockWebServer skal fungere.
-
 repositories {
     mavenCentral()
     maven(url = "https://jitpack.io")
@@ -37,6 +35,9 @@ val openHtmlToPdfVersion = "1.0.10"
 val verapdfVersion = "1.18.8"
 val jsoupVersion = "1.14.3"
 val mockitoKotlinVersion = "2.2.0"
+val okhttp3version = "4.9.3"
+
+ext["okhttp3.version"] = okhttp3version // For at tester som bruker MockWebServer skal fungere.
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -64,6 +65,7 @@ dependencies {
     implementation("com.openhtmltopdf:openhtmltopdf-svg-support:$openHtmlToPdfVersion")
     implementation("org.verapdf:validation-model:$verapdfVersion")
     implementation("org.jsoup:jsoup:$jsoupVersion")
+    implementation("com.squareup.okhttp3:okhttp:$okhttp3version")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:kafka:$testContainersVersion")
