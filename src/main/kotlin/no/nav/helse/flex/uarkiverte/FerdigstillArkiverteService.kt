@@ -7,7 +7,7 @@ import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import no.nav.helse.flex.logger
 import org.springframework.dao.DataAccessException
 import org.springframework.stereotype.Service
-import java.time.LocalDate
+import java.time.Instant
 
 @Service
 class FerdigstillArkiverteService(
@@ -52,7 +52,7 @@ class FerdigstillArkiverteService(
         }
     }
 
-    private fun hentOpprettetDato(fnr: String, id: String): LocalDate {
-        return spinnsynClient.hentVedtak(fnr).first { vedtak -> vedtak.id == id }.opprettet
+    private fun hentOpprettetDato(fnr: String, id: String): Instant {
+        return spinnsynClient.hentVedtak(fnr).first { vedtak -> vedtak.id == id }.opprettetTimestamp
     }
 }

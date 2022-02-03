@@ -21,7 +21,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.nio.charset.Charset
 import java.sql.Timestamp
 import java.time.Instant
-import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
 class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
@@ -43,11 +44,11 @@ class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
         val vedtakId = "88804146-28ee-30d9-b0a3-a904919c7a37"
         val fnr = "fnr-1"
         val journalpostId = "journalpost-1"
-        val opprettetDato = LocalDate.of(2022, 5, 1)
+        val opprettet = LocalDateTime.of(2022, 5, 1, 12, 5, 10).toInstant(ZoneOffset.UTC)
 
         opprettArkivertVedtak(vedtakId, fnr, journalpostId)
 
-        val spinnsynBackendResponse = listOf(RSVedtakWrapper(id = vedtakId, opprettet = opprettetDato))
+        val spinnsynBackendResponse = listOf(RSVedtakWrapper(id = vedtakId, opprettetTimestamp = opprettet))
         val mockResponse = MockResponse().setBody(spinnsynBackendResponse.serialisertTilString())
         spinnsynBackendMockWebServer.enqueue(mockResponse)
 
@@ -76,7 +77,7 @@ class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
         val journalpostRequestBody: FerdigstillJournalpostRequest =
             objectMapper.readValue(dokarkivRequest.body.readString(Charset.defaultCharset()))
 
-        journalpostRequestBody.datoJournal `should be equal to` opprettetDato
+        journalpostRequestBody.datoJournal `should be equal to` opprettet
         journalpostRequestBody.journalfoerendeEnhet `should be equal to` "9999"
 
         dokarkivMockWebServer.requestCount `should be equal to` 1

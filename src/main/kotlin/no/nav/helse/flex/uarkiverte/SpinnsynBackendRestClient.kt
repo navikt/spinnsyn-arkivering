@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import java.time.LocalDate
+import java.time.Instant
 
 @Component
 class SpinnsynBackendRestClient(
@@ -36,15 +36,15 @@ class SpinnsynBackendRestClient(
 
     data class RSVedtakWrapper(
         val id: String,
-        val opprettet: LocalDate,
+        val opprettetTimestamp: Instant,
     )
 
-    private fun RSVedtakWrapper.tilVedtak(): Vedtak = Vedtak(this.id, this.opprettet)
+    private fun RSVedtakWrapper.tilVedtak(): Vedtak = Vedtak(this.id, this.opprettetTimestamp)
 }
 
 data class Vedtak(
     val id: String,
-    val opprettet: LocalDate,
+    val opprettetTimestamp: Instant,
 )
 
 class TomVedtaksListeException(message: String) : RuntimeException(

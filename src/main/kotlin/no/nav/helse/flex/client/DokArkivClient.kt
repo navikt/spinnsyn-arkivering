@@ -12,7 +12,7 @@ import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Controller
 import org.springframework.web.client.RestTemplate
-import java.time.LocalDate
+import java.time.Instant
 
 @Controller
 class DokArkivClient(
@@ -66,5 +66,5 @@ class DokArkivClient(
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class FerdigstillJournalpostRequest(
     val journalfoerendeEnhet: String,
-    val datoJournal: LocalDate
+    val datoJournal: Instant
 )
