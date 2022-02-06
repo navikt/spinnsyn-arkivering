@@ -28,7 +28,7 @@ repositories {
 }
 
 val testContainersVersion = "1.16.2"
-val tokenSupportVersion = "1.3.9"
+val tokenSupportVersion = "1.3.10"
 val logstashLogbackEncoderVersion = "6.6"
 val kluentVersion = "1.68"
 val openHtmlToPdfVersion = "1.0.10"
