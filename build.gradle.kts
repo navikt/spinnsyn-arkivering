@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.6.6"
+    id("org.springframework.boot") version "2.6.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("jvm") version "1.6.10"
 }
@@ -31,7 +31,7 @@ ext["okhttp3.version"] = "4.9.3" // For at tester som bruker MockWebServer skal 
 
 val testContainersVersion = "1.16.3"
 val tokenSupportVersion = "2.0.14"
-val logstashLogbackEncoderVersion = "7.0.1"
+val logstashLogbackEncoderVersion = "7.1.1"
 val kluentVersion = "1.68"
 val openHtmlToPdfVersion = "1.0.10"
 val verapdfVersion = "1.20.1"
