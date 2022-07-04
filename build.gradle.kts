@@ -35,7 +35,7 @@ val logstashLogbackEncoderVersion = "7.1.1"
 val kluentVersion = "1.68"
 val openHtmlToPdfVersion = "1.0.10"
 val verapdfVersion = "1.20.1"
-val jsoupVersion = "1.14.3"
+val jsoupVersion = "1.15.2"
 val mockitoKotlinVersion = "2.2.0"
 
 dependencies {
