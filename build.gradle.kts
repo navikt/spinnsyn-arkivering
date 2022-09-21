@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.6.7"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "2.7.3"
+    id("io.spring.dependency-management") version "1.0.13.RELEASE"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     kotlin("plugin.spring") version "1.7.10"
     kotlin("jvm") version "1.7.10"
@@ -34,7 +34,7 @@ val tokenSupportVersion = "2.0.20"
 val logstashLogbackEncoderVersion = "7.1.1"
 val kluentVersion = "1.68"
 val openHtmlToPdfVersion = "1.0.10"
-val verapdfVersion = "1.20.1"
+val verapdfVersion = "1.22.2"
 val jsoupVersion = "1.14.3"
 val mockitoKotlinVersion = "2.2.0"
 
