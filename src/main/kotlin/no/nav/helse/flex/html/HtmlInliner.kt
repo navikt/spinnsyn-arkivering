@@ -5,7 +5,8 @@ import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.net.URL
-import java.time.OffsetDateTime
+import java.time.Clock
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -14,6 +15,8 @@ import java.util.*
 class HtmlInliner(
     @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String
 ) {
+
+    var clock = Clock.systemDefaultZone()
 
     val stylingCss =
         this::class.java.getResourceAsStream("/arkivering/styling.css").readBytes().toString(Charsets.UTF_8)
@@ -109,9 +112,9 @@ $stylingCss
             throw RuntimeException("Forventa at første child har id __next")
         }
 
-        body.child(0).before(personinfo.firstChild()!!)
-        body.child(0).before(arkHeader.firstChild()!!)
-        body.appendChild(arkFooter.firstChild()!!)
+        body.child(0).before(personinfo.body().firstChild()!!)
+        body.child(0).before(arkHeader.body().firstChild()!!)
+        body.appendChild(arkFooter.body().firstChild()!!)
 
         doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml)
 
@@ -123,7 +126,7 @@ $stylingCss
     }
 
     fun tidsstempel(): String {
-        val currentDateTimeInOslo = OffsetDateTime.now(ZoneId.of("Europe/Oslo")).withNano(0)
+        val currentDateTimeInOslo = Instant.now(clock).atZone(ZoneId.of("Europe/Oslo")).withNano(0)
         val formatter = DateTimeFormatter.ISO_DATE_TIME
         return currentDateTimeInOslo.format(formatter)
     }
