@@ -63,7 +63,7 @@ class HtmlInliner(
         }
         doc.select(".flex").forEach {
             if (!it.hasClass("arkivering-flex-fix")) {
-                throw RuntimeException("Flex er ikke støttet")
+                throw RuntimeException("Flex-styling er ikke støttet")
             }
             if (it.childrenSize() != 2) {
                 throw RuntimeException("arkivering-flex-fix må ha 2 children")
