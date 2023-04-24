@@ -9,6 +9,7 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 
 @Component
@@ -32,10 +33,6 @@ class HtmlInliner(
     val navSvgB64 =
         "data:image/svg+xml;base64," + Base64.getEncoder().encodeToString(navSvg.toByteArray(Charsets.UTF_8))
 
-    val personSvg = this::class.java.getResourceAsStream("/arkivering/person.svg").readBytes().toString(Charsets.UTF_8)
-    val personSvgB64 =
-        "data:image/svg+xml;base64," + Base64.getEncoder().encodeToString(personSvg.toByteArray(Charsets.UTF_8))
-
     fun inlineHtml(html: String, utbetalingId: String, fnr: String): String {
         val doc = Jsoup.parse(html)
         doc.select("link").forEach {
@@ -54,7 +51,10 @@ class HtmlInliner(
                 } else {
                     "$url$href"
                 }
-                val stylesheet = URL(adresse).readText().replace("@media print", "@media papirprint")
+                val stylesheet = URL(adresse).readText()
+                    .replace("@media print", "@media papirprint")
+                    .replace("&", "&amp;")
+
                 it.parent()?.append("<style>\n$stylesheet\n</style>")
                 it.remove()
             } else {
@@ -101,7 +101,6 @@ $stylingCss
             personinfo
                 .replace("##FNR##", fnrForVisning(fnr))
                 .replace("##TIDSSTEMPEL##", tidsstempel())
-                .replace("##PERSONSVG##", personSvgB64)
         )
         val body = doc.selectFirst("body") ?: throw RuntimeException("Må ha html body")
         if (body.children().size != 1) {
@@ -112,7 +111,8 @@ $stylingCss
             throw RuntimeException("Forventa at første child har id __next")
         }
 
-        body.child(0).before(personinfo.body().firstChild()!!)
+        body.child(0).child(0).removeAttr("class")
+        body.child(0).child(0).before(personinfo.body().firstChild()!!)
         body.child(0).before(arkHeader.body().firstChild()!!)
         body.appendChild(arkFooter.body().firstChild()!!)
 
@@ -127,7 +127,13 @@ $stylingCss
 
     fun tidsstempel(): String {
         val currentDateTimeInOslo = Instant.now(clock).atZone(ZoneId.of("Europe/Oslo")).withNano(0)
-        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        val formatter = DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            .optionalStart()
+            .appendOffsetId()
+            .optionalStart()
+            .parseCaseSensitive()
+            .toFormatter()
         return currentDateTimeInOslo.format(formatter)
     }
 }

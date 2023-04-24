@@ -5,7 +5,10 @@
 }
 
 #__next {
-    margin: 0cm 0.7cm;
+    margin-top: 0cm;
+    margin-right: 1cm;
+    margin-left: 1cm;
+    margin-bottom: 0cm;
     height: 850px;
 }
 
@@ -16,9 +19,9 @@ h1 {
 
 }
 
-h2 {
+h2 span {
     font-size: 1.5rem;
-    margin-top: 20px !important;
+    margin-top: 20px;
     font-weight: bold;
 
 }
@@ -45,20 +48,14 @@ td {
 
 /* person header styling */
 #personinfo {
-    margin-left: 20px;
-    margin-top: 20px;
     height: 100px;
+    margin-top: 30px;
     margin-bottom: 30px;
 }
 #navn {
     font-weight: bold;
     font-size: 16px;
     width: 350px;
-}
-#personikon {
-    display: inline-block;
-    width: 32px;
-    margin: 0 8px 0px 3px;
 }
 
 #personalia {
