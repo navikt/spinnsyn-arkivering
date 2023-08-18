@@ -18,9 +18,13 @@ class VedtakStatusListener(
         containerFactory = "aivenKafkaListenerContainerFactory"
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-        val vedtak = cr.value().tilVedtak()
-        arkivaren.arkiverVedtak(vedtak)
-        acknowledgment.acknowledge()
+        try {
+            val vedtak = cr.value().tilVedtak()
+            arkivaren.arkiverVedtak(vedtak)
+            acknowledgment.acknowledge()
+        } catch (e: Exception) {
+            acknowledgment.acknowledge()
+        }
     }
 
     fun String.tilVedtak(): VedtakStatusDto = objectMapper.readValue(this)
