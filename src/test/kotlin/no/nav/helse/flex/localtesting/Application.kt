@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,6 +19,9 @@ import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
 @SpringBootApplication(
     exclude = [DataSourceAutoConfiguration::class],
 )
+// Bruker annen profil for å skille Application fra Application i no.nav.helse.flex etter oppgradering til
+// Spring Boot 3.2.0. Husk å angi at ActiveProfile er "localtesting" i Run Configuration.
+@Profile("localtesting")
 class Application
 
 fun main(args: Array<String>) {
