@@ -3,6 +3,7 @@ package no.nav.helse.flex
 import no.nav.helse.flex.arkivering.PdfSkaperen
 import no.nav.helse.flex.html.HtmlInliner
 import org.amshove.kluent.`should be equal to`
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +30,8 @@ class HentingOgPdfGenereringTest : Testoppsett() {
         enqueFiler()
 
         val html = arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
-        val forventetHtml = HentingOgPdfGenereringTest::class.java.getResource("/forventet.html").readText()
+        val forventetHtml = HentingOgPdfGenereringTest::class.java.getResource("/forventet.html")?.readText()
+        assertNotNull(forventetHtml!!)
         html.html `should be equal to ignoring whitespace` forventetHtml
         validerRequests(uuid, fnr)
     }
