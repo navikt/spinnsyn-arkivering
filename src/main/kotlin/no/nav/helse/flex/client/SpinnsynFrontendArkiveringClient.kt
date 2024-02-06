@@ -7,9 +7,11 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.OK
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDate
+import java.util.*
 
 @Component
 class SpinnsynFrontendArkiveringClient(
@@ -24,6 +26,15 @@ class SpinnsynFrontendArkiveringClient(
         return hentVedtak(fnr = fnr, id = id)
     }
 
+    private fun isValidUUID(uuidString: String): Boolean {
+        return try {
+            UUID.fromString(uuidString)
+            true
+        } catch (e: IllegalArgumentException) {
+            false
+        }
+    }
+
     private fun hentVedtak(
         fnr: String,
         id: String,
@@ -35,13 +46,20 @@ class SpinnsynFrontendArkiveringClient(
 
         // Kaster RestTemplateException for alle 4xx og 5xx HTTP statuskoder.
         val result =
-            spinnsynFrontendArkiveringRestTemplate
-                .exchange(
-                    uriBuilder.toUriString(),
-                    HttpMethod.GET,
-                    HttpEntity<Any>(headers),
-                    String::class.java,
-                )
+            when (isValidUUID(id)) {
+                true -> {
+                    spinnsynFrontendArkiveringRestTemplate
+                        .exchange(
+                            uriBuilder.toUriString(),
+                            HttpMethod.GET,
+                            HttpEntity<Any>(headers),
+                            String::class.java,
+                        )
+                }
+                false -> {
+                    throw RestClientException("id inneholder potensielt farlig innhold")
+                }
+            }
 
         // TODO: Kommer ikke hit for annet enn 2xx og 3xx statuskoder så sjekken har ikke så mye verdi.
         if (result.statusCode != OK) {

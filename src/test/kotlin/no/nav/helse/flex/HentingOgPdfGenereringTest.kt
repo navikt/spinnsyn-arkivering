@@ -6,6 +6,7 @@ import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.client.RestClientException
 import java.io.File
 import java.time.Clock
 import java.time.Instant
@@ -102,5 +103,14 @@ class HentingOgPdfGenereringTest : Testoppsett() {
 
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
         htmlRequest.path `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+    }
+
+    @Test
+    fun `sjekker at SSRF ikke er mulig`() {
+        val uuidMedUri = "?path=https://skummelnettside.net"
+
+        assertThrows(RestClientException::class.java) {
+            arkivaren.hentPdf(fnr, uuidMedUri)
+        }
     }
 }
