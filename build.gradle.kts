@@ -1,5 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "3.2.2"
@@ -21,7 +21,7 @@ repositories {
     }
 }
 
-ext["okhttp3.version"] = "4.9.3" // Token-support tester trenger Mockwebserver.
+ext["okhttp3.version"] = "4.12" // Token-support tester trenger MockWebServer.
 
 val testContainersVersion = "1.19.4"
 val tokenSupportVersion = "4.1.3"
@@ -71,23 +71,30 @@ dependencies {
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
 }
 
-tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
-    this.archiveFileName.set("app.jar")
-}
-
-tasks.withType<KotlinCompile> {
+kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
         freeCompilerArgs.add("-Xjsr305=strict")
-
         if (System.getenv("CI") == "true") {
             allWarningsAsErrors.set(true)
         }
     }
 }
-tasks.withType<Test> {
-    useJUnitPlatform()
-    testLogging {
-        events("STANDARD_OUT", "STARTED", "PASSED", "FAILED", "SKIPPED")
+
+tasks {
+    test {
+        useJUnitPlatform()
+        jvmArgs("-XX:+EnableDynamicAgentLoading")
+        testLogging {
+            events("PASSED", "FAILED", "SKIPPED")
+            exceptionFormat = TestExceptionFormat.FULL
+        }
+        failFast = false
+    }
+}
+
+tasks {
+    bootJar {
+        archiveFileName = "app.jar"
     }
 }
