@@ -17,7 +17,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
 
-private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
+private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:14-alpine")
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
@@ -41,7 +41,7 @@ abstract class FellesTestOppsett {
                 System.setProperty("spring.datasource.password", it.password)
             }
 
-            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.1")).also {
+            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.3")).also {
                 it.start()
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
