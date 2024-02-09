@@ -23,7 +23,7 @@ private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>
 @SpringBootTest
 @EnableMockOAuth2Server
 @AutoConfigureMockMvc
-abstract class Testoppsett {
+abstract class FellesTestOppsett {
     @Autowired
     lateinit var arkivertVedtakRepository: ArkivertVedtakRepository
 
