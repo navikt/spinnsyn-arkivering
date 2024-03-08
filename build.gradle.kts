@@ -31,7 +31,7 @@ val openHtmlToPdfVersion = "1.0.10"
 val veraPdfVersion = "1.24.1"
 val jsoupVersion = "1.17.2"
 val mockitoKotlinVersion = "2.2.0"
-val jaxbRuntimeVersion = "2.4.0-b180830.0438"
+val jaxbRuntimeVersion = "4.0.5"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
