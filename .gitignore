@@ -3,7 +3,8 @@
 target
 out
 
-.gradle
+.gradle/
+.kotlin/
 build/
 pdf-tests/
 .DS_Store
