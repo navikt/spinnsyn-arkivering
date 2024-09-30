@@ -30,6 +30,7 @@ val kluentVersion = "1.73"
 val openHtmlToPdfVersion = "1.0.10"
 val veraPdfVersion = "1.26.1"
 val jsoupVersion = "1.18.1"
+val mockitoKotlinVersion = "2.2.0"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 
 dependencies {
@@ -39,6 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.postgresql:postgresql")
