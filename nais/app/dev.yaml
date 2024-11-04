@@ -5,8 +5,8 @@ team: flex
 kafkaPool: nav-dev
 azureTenant: trygdeetaten.no
 ingress: https://spinnsyn-arkivering.intern.dev.nav.no
-cpu: 100m
-memory: 600Mi
+cpu: 200m
+memory: 800Mi
 external-host:
   - dokarkiv.dev-fss-pub.nais.io
   - cdn.nav.no
