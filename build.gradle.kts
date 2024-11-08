@@ -27,7 +27,7 @@ val testContainersVersion = "1.20.3"
 val tokenSupportVersion = "5.0.5"
 val logstashLogbackEncoderVersion = "8.0"
 val kluentVersion = "1.73"
-val openHtmlToPdfVersion = "1.1.22"
+val openHtmlToPdfVersion = "1.0.10"
 val veraPdfVersion = "1.26.1"
 val jsoupVersion = "1.18.1"
 val mockitoKotlinVersion = "2.2.0"
@@ -51,9 +51,9 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:$openHtmlToPdfVersion")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-slf4j:$openHtmlToPdfVersion")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-svg-support:$openHtmlToPdfVersion")
+    implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:$openHtmlToPdfVersion")
+    implementation("com.openhtmltopdf:openhtmltopdf-slf4j:$openHtmlToPdfVersion")
+    implementation("com.openhtmltopdf:openhtmltopdf-svg-support:$openHtmlToPdfVersion")
     implementation("org.jsoup:jsoup:$jsoupVersion")
     implementation("org.verapdf:validation-model:$veraPdfVersion")
     // veraPDF trenger fortsat javax-pakker: https://github.com/veraPDF/veraPDF-library/issues/1314
