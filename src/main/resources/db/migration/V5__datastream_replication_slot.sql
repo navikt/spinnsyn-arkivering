@@ -1,0 +1,1 @@
+SELECT PG_CREATE_LOGICAL_REPLICATION_SLOT ('spinnsyn_arkivering_replication', 'pgoutput');
