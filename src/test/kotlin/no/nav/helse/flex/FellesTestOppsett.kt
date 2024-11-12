@@ -34,11 +34,12 @@ abstract class FellesTestOppsett {
         init {
             VeraGreenfieldFoundryProvider.initialise()
 
-            PostgreSQLContainer14().also {
-                it.start()
-                System.setProperty("spring.datasource.url", it.jdbcUrl)
-                System.setProperty("spring.datasource.username", it.username)
-                System.setProperty("spring.datasource.password", it.password)
+            PostgreSQLContainer14().apply {
+                withCommand("postgres", "-c", "wal_level=logical")
+                start()
+                System.setProperty("spring.datasource.url", "$jdbcUrl&reWriteBatchedInserts=true")
+                System.setProperty("spring.datasource.username", username)
+                System.setProperty("spring.datasource.password", password)
             }
 
             KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1")).also {

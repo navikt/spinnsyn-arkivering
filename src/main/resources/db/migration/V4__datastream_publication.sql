@@ -1,0 +1,1 @@
+CREATE PUBLICATION spinnsyn_arkivering_publication for ALL TABLES;
