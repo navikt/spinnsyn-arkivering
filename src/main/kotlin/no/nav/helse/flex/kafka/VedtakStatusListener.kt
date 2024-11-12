@@ -34,8 +34,10 @@ class VedtakStatusListener(
                 if (e.message?.contains("Fant ikke aktørid for person i pdl") == true) {
                     log.info("Fant ikke aktørid for person i pdl, ignorerer melding siden vi er i dev " + vedtak.id)
                     acknowledgment.acknowledge()
+                    return
                 }
             }
+            throw e
         }
     }
 
