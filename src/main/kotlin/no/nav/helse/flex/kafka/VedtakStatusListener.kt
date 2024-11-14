@@ -20,24 +20,6 @@ class VedtakStatusListener(
     @KafkaListener(
         topics = [FLEX_VEDTAK_STATUS_TOPIC],
         containerFactory = "aivenKafkaListenerContainerFactory",
-        groupId = "spinnsyn-arkivering-tell-vedtak-v1",
-        properties = [
-            "auto.offset.reset=earliest",
-            "max.poll.records=1000",
-        ],
-    )
-    fun debug(
-        cr: ConsumerRecord<String, String>,
-        acknowledgment: Acknowledgment,
-    ) {
-        val vedtak = cr.value().tilVedtak()
-        arkivaren.tellManglendeVedtak(vedtak)
-        acknowledgment.acknowledge()
-    }
-
-    @KafkaListener(
-        topics = [FLEX_VEDTAK_STATUS_TOPIC],
-        containerFactory = "aivenKafkaListenerContainerFactory",
     )
     fun listen(
         cr: ConsumerRecord<String, String>,
