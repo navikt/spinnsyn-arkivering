@@ -30,7 +30,6 @@ val kluentVersion = "1.73"
 val openHtmlToPdfVersion = "1.0.10"
 val veraPdfVersion = "1.26.1"
 val jsoupVersion = "1.18.1"
-val mockitoKotlinVersion = "2.2.0"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 
 dependencies {
@@ -85,6 +84,7 @@ tasks {
         testLogging {
             events("PASSED", "FAILED", "SKIPPED")
             exceptionFormat = TestExceptionFormat.FULL
+            showStandardStreams = true
         }
         failFast = false
     }
