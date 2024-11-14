@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.atomic.AtomicInteger
 
 @Component
 class Arkivaren(
@@ -19,9 +20,12 @@ class Arkivaren(
     @Value("\${nais.app.image}")
     val naisAppImage: String,
 ) {
-    val log = logger()
+    private val log = logger()
 
     val norskDato: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    private val antallManglendeVedtak = AtomicInteger(0)
+    private val totaltAntallVedtak = AtomicInteger(0)
 
     fun arkiverVedtak(vedtak: VedtakStatusDto): Int {
         if (vedtak.vedtakStatus != VedtakStatus.MOTATT) {
@@ -32,6 +36,19 @@ class Arkivaren(
             return 0
         }
         return lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
+    }
+
+    fun tellManglendeVedtak(vedtak: VedtakStatusDto) {
+        if (vedtak.vedtakStatus == VedtakStatus.MOTATT) {
+            totaltAntallVedtak.incrementAndGet()
+            if (!arkivertVedtakRepository.existsByVedtakId(vedtak.id)) {
+                antallManglendeVedtak.incrementAndGet()
+            }
+        }
+    }
+
+    fun hentAntallVedtak(): Pair<Int, Int> {
+        return totaltAntallVedtak.get() to antallManglendeVedtak.get()
     }
 
     private fun lagreJournalpost(
