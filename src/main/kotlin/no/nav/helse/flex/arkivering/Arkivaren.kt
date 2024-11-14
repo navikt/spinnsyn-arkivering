@@ -45,7 +45,10 @@ class Arkivaren(
                 antallManglendeVedtak.incrementAndGet()
             }
         }
-        log.info("Fant at $antallManglendeVedtak av $totaltAntallVedtak vedtak er ikke arkivert.")
+    }
+
+    fun hentAntallVedtak(): Pair<Int, Int> {
+        return totaltAntallVedtak.get() to antallManglendeVedtak.get()
     }
 
     private fun lagreJournalpost(

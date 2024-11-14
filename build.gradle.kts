@@ -84,7 +84,6 @@ tasks {
         testLogging {
             events("PASSED", "FAILED", "SKIPPED")
             exceptionFormat = TestExceptionFormat.FULL
-            showStandardStreams = true
         }
         failFast = false
     }

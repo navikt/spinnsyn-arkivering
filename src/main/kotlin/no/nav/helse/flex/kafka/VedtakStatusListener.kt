@@ -20,7 +20,7 @@ class VedtakStatusListener(
     @KafkaListener(
         topics = [FLEX_VEDTAK_STATUS_TOPIC],
         containerFactory = "aivenKafkaListenerContainerFactory",
-        groupId = "spinnsyn-arkivering-debug-v1",
+        groupId = "spinnsyn-arkivering-tell-vedtak-v1",
         properties = [
             "auto.offset.reset=earliest",
             "max.poll.records=1000",
