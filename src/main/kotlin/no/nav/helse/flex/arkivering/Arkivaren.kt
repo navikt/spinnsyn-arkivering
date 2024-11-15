@@ -1,6 +1,5 @@
 package no.nav.helse.flex.arkivering
 
-import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.kafka.VedtakStatusDto
@@ -15,7 +14,6 @@ class Arkivaren(
     val pdfSkaperen: PdfSkaperen,
     val dokArkivClient: DokArkivClient,
     val arkivertVedtakRepository: ArkivertVedtakRepository,
-    val registry: MeterRegistry,
     @Value("\${nais.app.image}")
     val naisAppImage: String,
 ) {
@@ -64,6 +62,5 @@ class Arkivaren(
             ),
         )
         log.info("Arkiverte vedtak $id.")
-        registry.counter("vedtak_arkivert").increment()
     }
 }
