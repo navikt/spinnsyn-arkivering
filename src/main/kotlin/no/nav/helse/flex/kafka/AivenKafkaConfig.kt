@@ -47,12 +47,12 @@ class AivenKafkaConfig(
     fun aivenKafkaListenerContainerFactory(kafkaErrorHandler: KafkaErrorHandler): ConcurrentKafkaListenerContainerFactory<String, String> {
         val config =
             mapOf(
-                ConsumerConfig.GROUP_ID_CONFIG to "spinnsyn-arkivering-consumer",
+                ConsumerConfig.GROUP_ID_CONFIG to "spinnsyn-arkivering-vedtak-consumer",
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to kafkaAutoOffsetReset,
                 ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
-                ConsumerConfig.MAX_POLL_RECORDS_CONFIG to "1",
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG to "1000",
                 ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG to "600000",
             ) + commonConfig()
         val consumerFactory = DefaultKafkaConsumerFactory<String, String>(config)
