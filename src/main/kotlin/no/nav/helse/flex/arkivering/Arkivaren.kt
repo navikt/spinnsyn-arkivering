@@ -30,37 +30,37 @@ class Arkivaren(
             // log.warn("Vedtak med $vedtak.id er allerede arkivert.")
             return
         }
-        lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
+        lagreJournalpost(fnr = vedtak.fnr, vedtakId = vedtak.id)
     }
 
     private fun lagreJournalpost(
         fnr: String,
-        id: String,
+        vedtakId: String,
     ) {
-        val vedtaket = pdfSkaperen.hentPdf(fnr = fnr, id = id)
+        val vedtaket = pdfSkaperen.hentPdf(fnr = fnr, id = vedtakId)
 
         val tittel =
             "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} " +
                 "til ${vedtaket.tom.format(norskDato)}"
-        val journalpostRequest = skapJournalpostRequest(fnr, id, vedtaket.pdf, tittel)
-        val journalpostResponse = dokArkivClient.opprettJournalpost(journalpostRequest, id)
+        val journalpostRequest = skapJournalpostRequest(fnr, vedtakId, vedtaket.pdf, tittel)
+        val journalpostResponse = dokArkivClient.opprettJournalpost(journalpostRequest, vedtakId)
 
         // TODO: Skal vi kaste en exception her i stedet, eller bare logge melding i tillegg?
         if (!journalpostResponse.journalpostferdigstilt) {
-            log.warn("Journalpost ${journalpostResponse.journalpostId} for vedtak $id ble ikke ferdigstilt.")
+            log.warn("Journalpost ${journalpostResponse.journalpostId} for vedtak $vedtakId ble ikke ferdigstilt.")
         }
 
         arkivertVedtakRepository.save(
             ArkivertVedtak(
                 id = null,
                 fnr = fnr,
-                vedtakId = id,
+                vedtakId = vedtakId,
                 journalpostId = journalpostResponse.journalpostId,
                 opprettet = Instant.now(),
                 spinnsynArkiveringImage = naisAppImage,
                 spinnsynFrontendImage = vedtaket.versjon,
             ),
         )
-        log.info("Arkiverte vedtak $id.")
+        log.info("Arkiverte vedtak med vedtakId: $vedtakId.")
     }
 }
