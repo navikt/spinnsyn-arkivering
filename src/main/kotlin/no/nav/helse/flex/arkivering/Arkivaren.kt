@@ -26,8 +26,7 @@ class Arkivaren(
             return
         }
         if (arkivertVedtakRepository.existsByVedtakId(vedtak.id)) {
-            // TODO. Slå på logging igjen etter reprodusering av manglende vedtak.
-            // log.warn("Vedtak med $vedtak.id er allerede arkivert.")
+            log.info("Vedtak med vedtakId: ${vedtak.id} er allerede arkivert.")
             return
         }
         lagreJournalpost(fnr = vedtak.fnr, vedtakId = vedtak.id)
