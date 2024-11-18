@@ -15,7 +15,7 @@ import java.io.*
 
 object PdfGenerering {
     val colorProfile: ByteArray = IOUtils.toByteArray(this::class.java.getResourceAsStream("/sRGB2014.icc"))
-    val fonts: List<FontMetadata> = objectMapper.readValue(this::class.java.getResourceAsStream("/fonts/config.json"))
+    val fonts: List<FontMetadata> = objectMapper.readValue(this::class.java.getResourceAsStream("/fonts/config.json")!!)
 
     val log = logger()
 
@@ -29,7 +29,13 @@ object PdfGenerering {
                 PdfRendererBuilder()
                     .apply {
                         for (font in fonts) {
-                            useFont({ ByteArrayInputStream(font.bytes) }, font.family, font.weight, font.style, font.subset)
+                            useFont(
+                                { ByteArrayInputStream(font.bytes) },
+                                font.family,
+                                font.weight,
+                                font.style,
+                                font.subset,
+                            )
                         }
                     }
                     .usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
@@ -54,10 +60,14 @@ object PdfGenerering {
             result.testAssertions
                 .filter { it.status != TestAssertion.Status.PASSED }
         failures.forEach { test ->
-            log.warn(test.message)
-            log.warn("Location ${test.location.context} ${test.location.level}")
-            log.warn("Status ${test.status}")
-            log.warn("Test number ${test.ruleId.testNumber}")
+            failures.forEach { failure ->
+                log.error(
+                    "Message: ${failure.message}, " +
+                        "Location: ${failure.location.context} ${failure.location.level}, " +
+                        "Status: ${failure.status}, " +
+                        "Test number: ${failure.ruleId.testNumber}).",
+                )
+            }
         }
         return failures.isEmpty()
     }
