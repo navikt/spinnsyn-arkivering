@@ -28,8 +28,7 @@ class HentingOgPdfGenereringTest : FellesTestOppsett() {
         enqueFiler()
 
         val html = arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
-        val forventetHtml = HentingOgPdfGenereringTest::class.java.getResource("/forventet.html").readText()
-        println(html.html)
+        val forventetHtml = HentingOgPdfGenereringTest::class.java.getResource("/forventet.html")!!.readText()
         html.html `should be equal to ignoring whitespace` forventetHtml
         validerRequests(uuid, fnr)
     }

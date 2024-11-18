@@ -8,6 +8,8 @@ import java.time.Instant
 @Repository
 interface ArkivertVedtakRepository : CrudRepository<ArkivertVedtak, String> {
     fun existsByVedtakId(vedtakId: String): Boolean
+
+    fun findByFnr(fnr: String): List<ArkivertVedtak>
 }
 
 data class ArkivertVedtak(
