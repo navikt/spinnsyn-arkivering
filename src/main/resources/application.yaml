@@ -36,7 +36,7 @@ no.nav.security.jwt:
           client-auth-method: client_secret_basic
 
 aiven-kafka:
-  auto-offset-reset: earliest
+  auto-offset-reset: none
   security-protocol: SSL
 
 management:
