@@ -52,6 +52,7 @@ spec:
         databases:
           - name: spinnsyn-arkivering-db
             users:
+              - name: bigquery-dataprodukt
               - name: bigquery-datastream
         maintenance:
           day: 2
