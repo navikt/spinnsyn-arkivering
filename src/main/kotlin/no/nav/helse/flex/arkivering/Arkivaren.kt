@@ -44,9 +44,11 @@ class Arkivaren(
         val journalpostRequest = skapJournalpostRequest(fnr, vedtakId, vedtaket.pdf, tittel)
         val journalpostResponse = dokArkivClient.opprettJournalpost(journalpostRequest, vedtakId)
 
-        // TODO: Skal vi kaste en exception her i stedet, eller bare logge melding i tillegg?
         if (!journalpostResponse.journalpostferdigstilt) {
-            log.warn("Journalpost ${journalpostResponse.journalpostId} for vedtak $vedtakId ble ikke ferdigstilt.")
+            throw RuntimeException(
+                "Journalpost ${journalpostResponse.journalpostId} for vedtak $vedtakId ble ikke " +
+                    "ferdigstilt: ${journalpostResponse.melding}",
+            )
         }
 
         arkivertVedtakRepository.save(

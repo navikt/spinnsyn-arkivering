@@ -32,7 +32,7 @@ class IntegrasjonTest : FellesTestOppsett() {
 
     @Test
     @Order(1)
-    fun `mottar et vedtak som skal arkiveres`() {
+    fun `Arkiverer vedtak`() {
         enqueFiler()
         val journalpostResponse =
             JournalpostResponse(
@@ -80,7 +80,7 @@ class IntegrasjonTest : FellesTestOppsett() {
 
     @Test
     @Order(2)
-    fun `mottar et duplikat vedtak som ikke arkiveres`() {
+    fun `Arkiverer ikke ett duplikat vedtak`() {
         arkivertVedtakRepository.count() `should be equal to` 1L
         kafkaProducer.send(
             ProducerRecord(
@@ -98,7 +98,7 @@ class IntegrasjonTest : FellesTestOppsett() {
 
     @Test
     @Order(3)
-    fun `mottar et vedtak som ikke har status LEST som ikke arkiveres`() {
+    fun `Arkiverer ikke vedtak som ikke har status LEST`() {
         arkivertVedtakRepository.count() `should be equal to` 1L
         kafkaProducer.send(
             ProducerRecord(
@@ -112,5 +112,38 @@ class IntegrasjonTest : FellesTestOppsett() {
         await().during(5, TimeUnit.SECONDS).until {
             arkivertVedtakRepository.count() == 1L
         }
+    }
+
+    @Test
+    @Order(4)
+    fun `Vedtak blir ikke lagret når lagring av journalpost feiler`() {
+        val vedtakId = UUID.randomUUID().toString()
+        val fnr = "01019001010"
+
+        enqueFiler()
+        val journalpostResponse =
+            JournalpostResponse(
+                dokumenter = emptyList(),
+                journalpostId = "jpostid234",
+                journalpostferdigstilt = false,
+                melding = "Feil ved oppretting av journalpost.",
+            )
+        val response =
+            MockResponse()
+                .setBody(journalpostResponse.serialisertTilString())
+                .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+        dokarkivMockWebServer.enqueue(response)
+
+        kafkaProducer.send(
+            ProducerRecord(
+                FLEX_VEDTAK_STATUS_TOPIC,
+                null,
+                fnr,
+                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
+            ),
+        ).get()
+
+        // Det skal ikke finnes noen arkiverte vedtak siden journalposten ikke ble opprettet.
+        await().during(3, TimeUnit.SECONDS).until { arkivertVedtakRepository.findByFnr(fnr).isEmpty() }
     }
 }
