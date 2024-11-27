@@ -4,7 +4,7 @@ namespace: flex
 team: flex
 kafkaPool: nav-prod
 azureTenant: nav.no
-cpu: 1000m
+cpu: 100m
 memory: 2048Mi
 external-host:
   - dokarkiv.prod-fss-pub.nais.io
