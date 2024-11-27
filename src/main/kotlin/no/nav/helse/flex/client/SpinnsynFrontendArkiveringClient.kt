@@ -28,7 +28,7 @@ class SpinnsynFrontendArkiveringClient(
         fnr: String,
         id: String,
     ): HtmlVedtak {
-        val uriBuilder = UriComponentsBuilder.fromHttpUrl("$url/syk/sykepenger/vedtak/arkivering/$id")
+        val uriBuilder = UriComponentsBuilder.fromUriString("$url/syk/sykepenger/vedtak/arkivering/$id")
 
         val headers = HttpHeaders()
         headers["fnr"] = fnr
