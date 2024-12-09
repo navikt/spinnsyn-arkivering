@@ -28,7 +28,7 @@ val tokenSupportVersion = "5.0.13"
 val logstashLogbackEncoderVersion = "8.0"
 val kluentVersion = "1.73"
 val openHtmlToPdfVersion = "1.0.10"
-val veraPdfVersion = "1.26.1"
+val veraPdfVersion = "1.26.2"
 val jsoupVersion = "1.18.3"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 
