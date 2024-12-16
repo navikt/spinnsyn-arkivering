@@ -42,7 +42,7 @@ abstract class FellesTestOppsett {
                 System.setProperty("spring.datasource.password", password)
             }
 
-            KafkaContainer(DockerImageName.parse("apache/kafka-native")).also {
+            KafkaContainer(DockerImageName.parse("apache/kafka-native:3.8.1")).also {
                 it.start()
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
