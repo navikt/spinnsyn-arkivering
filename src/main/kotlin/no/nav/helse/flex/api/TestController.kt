@@ -3,6 +3,9 @@ package no.nav.helse.flex.api
 import jakarta.servlet.http.HttpServletResponse
 import no.nav.helse.flex.arkivering.PdfSkaperen
 import no.nav.helse.flex.config.EnvironmentToggles
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenResponse
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
+import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
@@ -18,6 +21,8 @@ import java.util.UUID
 class TestController(
     val arkivaren: PdfSkaperen,
     val environmentToggles: EnvironmentToggles,
+    val oAuth2AccessTokenService: OAuth2AccessTokenService,
+    val clientConfigurationProperties: ClientConfigurationProperties,
 ) {
     fun dobbeltsjekkProd() {
         if (environmentToggles.isProduction()) {
@@ -36,6 +41,14 @@ class TestController(
         val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, id = utbetalingId.toString())
         response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.versjon)
         return hentSomHtmlOgInlineTing.html
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/token"], produces = [MediaType.TEXT_HTML_VALUE])
+    fun hentHtml(): OAuth2AccessTokenResponse {
+        return oAuth2AccessTokenService.getAccessToken(
+            clientConfigurationProperties.registration.get("spinnsyn-frontend-arkivering-credentials")!!,
+        )
     }
 
     @ResponseBody
