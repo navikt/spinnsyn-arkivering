@@ -3,7 +3,6 @@ package no.nav.helse.flex.api
 import jakarta.servlet.http.HttpServletResponse
 import no.nav.helse.flex.arkivering.PdfSkaperen
 import no.nav.helse.flex.config.EnvironmentToggles
-import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenResponse
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.core.api.Unprotected
@@ -45,10 +44,13 @@ class TestController(
 
     @ResponseBody
     @GetMapping(value = ["/token"], produces = [MediaType.TEXT_HTML_VALUE])
-    fun hentHtml(): OAuth2AccessTokenResponse {
-        return oAuth2AccessTokenService.getAccessToken(
-            clientConfigurationProperties.registration.get("spinnsyn-frontend-arkivering-credentials")!!,
-        )
+    fun hentHtml(): Pair<String?, Int?> {
+        val accessToken =
+            oAuth2AccessTokenService.getAccessToken(
+                clientConfigurationProperties.registration.get("spinnsyn-frontend-arkivering-credentials")!!,
+            )
+
+        return Pair(accessToken.access_token, accessToken.expires_in)
     }
 
     @ResponseBody
