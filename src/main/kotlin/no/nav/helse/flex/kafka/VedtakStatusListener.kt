@@ -36,6 +36,9 @@ class VedtakStatusListener(
                     acknowledgment.acknowledge()
                     return
                 }
+                log.warn("Noe funker ikke i dev, skipper " + vedtak.id, e)
+                acknowledgment.acknowledge()
+                return
             }
             throw e
         }
