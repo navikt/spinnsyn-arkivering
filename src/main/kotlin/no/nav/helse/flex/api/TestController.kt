@@ -44,13 +44,13 @@ class TestController(
 
     @ResponseBody
     @GetMapping(value = ["/token"], produces = [MediaType.TEXT_HTML_VALUE])
-    fun hentHtml(): Pair<String?, Int?> {
+    fun hentHtml(): String {
         val accessToken =
             oAuth2AccessTokenService.getAccessToken(
                 clientConfigurationProperties.registration.get("spinnsyn-frontend-arkivering-credentials")!!,
             )
 
-        return Pair(accessToken.access_token, accessToken.expires_in)
+        return accessToken.access_token!!
     }
 
     @ResponseBody
