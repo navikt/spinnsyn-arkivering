@@ -45,6 +45,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.apache.httpcomponents.client5:httpclient5")
     implementation("org.aspectj:aspectjrt")
     implementation("org.aspectj:aspectjweaver")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
