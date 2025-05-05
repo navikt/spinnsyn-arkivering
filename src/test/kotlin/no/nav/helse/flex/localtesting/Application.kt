@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
 
 @Controller
 @Unprotected
-class TestController() {
+class TestController {
     final val pdfSkaperen: PdfSkaperen
 
     init {
@@ -67,9 +67,8 @@ class TestController() {
     }
 
     // Lager RestTemplate som ikke gjør protocol upgrade: https://nav-it.slack.com/archives/C5KUST8N6/p1736954170766729
-    fun lagRestTemplate(): RestTemplate {
-        return RestTemplateBuilder()
+    fun lagRestTemplate(): RestTemplate =
+        RestTemplateBuilder()
             .requestFactory(Supplier { AadRestTemplateConfiguration.lagRequestFactoryUtenProtocolUpgrade() })
             .build()
-    }
 }

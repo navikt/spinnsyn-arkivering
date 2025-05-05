@@ -6,7 +6,10 @@ import java.awt.geom.AffineTransform
 import java.awt.image.AffineTransformOp
 import java.awt.image.BufferedImage
 
-data class ImageSize(val width: Float, val height: Float)
+data class ImageSize(
+    val width: Float,
+    val height: Float,
+)
 
 fun toPortait(image: BufferedImage): BufferedImage {
     if (image.height >= image.width) {

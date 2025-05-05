@@ -19,16 +19,32 @@ class HtmlInliner(
     var clock = Clock.systemDefaultZone()
 
     val stylingCss =
-        this::class.java.getResourceAsStream("/arkivering/styling.css").readBytes().toString(Charsets.UTF_8)
+        this::class.java
+            .getResourceAsStream("/arkivering/styling.css")
+            .readBytes()
+            .toString(Charsets.UTF_8)
 
     val footer =
-        this::class.java.getResourceAsStream("/arkivering/footer.html").readBytes().toString(Charsets.UTF_8)
+        this::class.java
+            .getResourceAsStream("/arkivering/footer.html")
+            .readBytes()
+            .toString(Charsets.UTF_8)
     val header =
-        this::class.java.getResourceAsStream("/arkivering/header.html").readBytes().toString(Charsets.UTF_8)
+        this::class.java
+            .getResourceAsStream("/arkivering/header.html")
+            .readBytes()
+            .toString(Charsets.UTF_8)
     val personinfo =
-        this::class.java.getResourceAsStream("/arkivering/personinfo.html").readBytes().toString(Charsets.UTF_8)
+        this::class.java
+            .getResourceAsStream("/arkivering/personinfo.html")
+            .readBytes()
+            .toString(Charsets.UTF_8)
 
-    val navSvg = this::class.java.getResourceAsStream("/arkivering/nav.svg").readBytes().toString(Charsets.UTF_8)
+    val navSvg =
+        this::class.java
+            .getResourceAsStream("/arkivering/nav.svg")
+            .readBytes()
+            .toString(Charsets.UTF_8)
     val navSvgB64 =
         "data:image/svg+xml;base64," + Base64.getEncoder().encodeToString(navSvg.toByteArray(Charsets.UTF_8))
 
@@ -58,7 +74,9 @@ class HtmlInliner(
 
                 @Suppress("DEPRECATION")
                 val stylesheet =
-                    URI(adresse).toURL().readText()
+                    URI(adresse)
+                        .toURL()
+                        .readText()
                         .replace("@media print", "@media papirprint")
                         .replace("&", "&amp;")
 
@@ -131,9 +149,7 @@ $stylingCss
         return doc.toString()
     }
 
-    fun fnrForVisning(fnr: String): String {
-        return "${fnr.slice(0..5)} ${fnr.slice(6 until fnr.length)}"
-    }
+    fun fnrForVisning(fnr: String): String = "${fnr.slice(0..5)} ${fnr.slice(6 until fnr.length)}"
 
     fun tidsstempel(): String {
         val currentDateTimeInOslo = Instant.now(clock).atZone(ZoneId.of("Europe/Oslo")).withNano(0)
