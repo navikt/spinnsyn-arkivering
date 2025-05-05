@@ -25,26 +25,26 @@ object PdfGenerering {
 
     fun createPDFA(html: String): ByteArray {
         val pdf =
-            ByteArrayOutputStream().apply {
-                PdfRendererBuilder()
-                    .apply {
-                        for (font in fonts) {
-                            useFont(
-                                { ByteArrayInputStream(font.bytes) },
-                                font.family,
-                                font.weight,
-                                font.style,
-                                font.subset,
-                            )
-                        }
-                    }
-                    .usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
-                    .useColorProfile(colorProfile)
-                    .useSVGDrawer(BatikSVGDrawer())
-                    .withHtmlContent(html, null)
-                    .toStream(this)
-                    .run()
-            }.toByteArray()
+            ByteArrayOutputStream()
+                .apply {
+                    PdfRendererBuilder()
+                        .apply {
+                            for (font in fonts) {
+                                useFont(
+                                    { ByteArrayInputStream(font.bytes) },
+                                    font.family,
+                                    font.weight,
+                                    font.style,
+                                    font.subset,
+                                )
+                            }
+                        }.usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
+                        .useColorProfile(colorProfile)
+                        .useSVGDrawer(BatikSVGDrawer())
+                        .withHtmlContent(html, null)
+                        .toStream(this)
+                        .run()
+                }.toByteArray()
         require(verifyCompliance(pdf)) { "Non-compliant PDF/A :(" }
         return pdf
     }

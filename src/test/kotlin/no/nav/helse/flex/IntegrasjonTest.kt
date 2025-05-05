@@ -46,14 +46,15 @@ class IntegrasjonTest : FellesTestOppsett() {
                 .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         dokarkivMockWebServer.enqueue(response)
 
-        kafkaProducer.send(
-            ProducerRecord(
-                FLEX_VEDTAK_STATUS_TOPIC,
-                null,
-                fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
-            ),
-        ).get()
+        kafkaProducer
+            .send(
+                ProducerRecord(
+                    FLEX_VEDTAK_STATUS_TOPIC,
+                    null,
+                    fnr,
+                    VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
+                ),
+            ).get()
 
         await().atMost(10, TimeUnit.SECONDS).until {
             arkivertVedtakRepository.existsByVedtakId(vedtakId)
@@ -82,14 +83,15 @@ class IntegrasjonTest : FellesTestOppsett() {
     @Order(2)
     fun `Arkiverer ikke ett duplikat vedtak`() {
         arkivertVedtakRepository.count() `should be equal to` 1L
-        kafkaProducer.send(
-            ProducerRecord(
-                FLEX_VEDTAK_STATUS_TOPIC,
-                null,
-                fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
-            ),
-        ).get()
+        kafkaProducer
+            .send(
+                ProducerRecord(
+                    FLEX_VEDTAK_STATUS_TOPIC,
+                    null,
+                    fnr,
+                    VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
+                ),
+            ).get()
 
         await().during(5, TimeUnit.SECONDS).until {
             arkivertVedtakRepository.count() == 1L
@@ -100,14 +102,15 @@ class IntegrasjonTest : FellesTestOppsett() {
     @Order(3)
     fun `Arkiverer ikke vedtak som ikke har status LEST`() {
         arkivertVedtakRepository.count() `should be equal to` 1L
-        kafkaProducer.send(
-            ProducerRecord(
-                FLEX_VEDTAK_STATUS_TOPIC,
-                null,
-                fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.LEST).serialisertTilString(),
-            ),
-        ).get()
+        kafkaProducer
+            .send(
+                ProducerRecord(
+                    FLEX_VEDTAK_STATUS_TOPIC,
+                    null,
+                    fnr,
+                    VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.LEST).serialisertTilString(),
+                ),
+            ).get()
 
         await().during(5, TimeUnit.SECONDS).until {
             arkivertVedtakRepository.count() == 1L
@@ -134,14 +137,15 @@ class IntegrasjonTest : FellesTestOppsett() {
                 .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         dokarkivMockWebServer.enqueue(response)
 
-        kafkaProducer.send(
-            ProducerRecord(
-                FLEX_VEDTAK_STATUS_TOPIC,
-                null,
-                fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
-            ),
-        ).get()
+        kafkaProducer
+            .send(
+                ProducerRecord(
+                    FLEX_VEDTAK_STATUS_TOPIC,
+                    null,
+                    fnr,
+                    VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
+                ),
+            ).get()
 
         // Det skal ikke finnes noen arkiverte vedtak siden journalposten ikke ble opprettet.
         await().during(3, TimeUnit.SECONDS).until { arkivertVedtakRepository.findByFnr(fnr).isEmpty() }

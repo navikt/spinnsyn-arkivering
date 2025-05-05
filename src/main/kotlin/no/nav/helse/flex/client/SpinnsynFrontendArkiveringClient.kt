@@ -20,9 +20,7 @@ class SpinnsynFrontendArkiveringClient(
     fun hentVedtakSomHtml(
         fnr: String,
         id: String,
-    ): HtmlVedtak {
-        return hentVedtak(fnr = fnr, id = id)
-    }
+    ): HtmlVedtak = hentVedtak(fnr = fnr, id = id)
 
     private fun hentVedtak(
         fnr: String,

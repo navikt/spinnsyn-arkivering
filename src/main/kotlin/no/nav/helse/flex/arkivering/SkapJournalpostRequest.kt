@@ -12,8 +12,8 @@ fun skapJournalpostRequest(
     id: String,
     pdf: ByteArray,
     tittel: String,
-): JournalpostRequest {
-    return JournalpostRequest(
+): JournalpostRequest =
+    JournalpostRequest(
         bruker =
             Bruker(
                 id = fnr,
@@ -50,4 +50,3 @@ fun skapJournalpostRequest(
                 idType = "FNR",
             ),
     )
-}

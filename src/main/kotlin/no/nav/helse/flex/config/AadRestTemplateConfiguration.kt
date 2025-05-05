@@ -24,12 +24,14 @@ class AadRestTemplateConfiguration {
     companion object {
         fun lagRequestFactoryUtenProtocolUpgrade(): HttpComponentsClientHttpRequestFactory {
             val requestConfig =
-                RequestConfig.custom()
+                RequestConfig
+                    .custom()
                     .setProtocolUpgradeEnabled(false)
                     .build()
 
             val httpClient =
-                HttpClientBuilder.create()
+                HttpClientBuilder
+                    .create()
                     .setDefaultRequestConfig(requestConfig)
                     .build()
 
@@ -72,11 +74,10 @@ class AadRestTemplateConfiguration {
     private fun bearerTokenInterceptor(
         clientProperties: ClientProperties,
         oAuth2AccessTokenService: OAuth2AccessTokenService,
-    ): ClientHttpRequestInterceptor {
-        return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
+    ): ClientHttpRequestInterceptor =
+        ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray, execution: ClientHttpRequestExecution ->
             val response = oAuth2AccessTokenService.getAccessToken(clientProperties)
             response.access_token?.let { request.headers.setBearerAuth(it) }
             execution.execute(request, body)
         }
-    }
 }
