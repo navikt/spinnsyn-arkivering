@@ -38,7 +38,7 @@ fun skapJournalpostRequest(
             Sak(
                 sakstype = "GENERELL_SAK",
             ),
-        kanal = "INGEN_DISTRIBUSJON",
+        kanal = "NAV_NO_UTEN_VARSLING",
         journalpostType = "UTGAAENDE",
         journalfoerendeEnhet = "9999",
         eksternReferanseId = id,
