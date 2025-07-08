@@ -69,6 +69,7 @@ class IntegrasjonTest : FellesTestOppsett() {
         val jpostRequest: JournalpostRequest =
             objectMapper.readValue(journalfoeringRequest.body.readString(Charset.defaultCharset()))
         jpostRequest.tittel `should be equal to` "Svar på søknad om sykepenger for periode: 12.03.2020 til 30.04.2020"
+        jpostRequest.kanal `should be equal to` "NAV_NO_UTEN_VARSLING"
 
         val arkivertVedtak = arkivertVedtakRepository.findAll().first { it.vedtakId == vedtakId }
 
