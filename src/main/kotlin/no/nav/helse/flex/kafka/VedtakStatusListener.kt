@@ -26,6 +26,7 @@ class VedtakStatusListener(
         acknowledgment: Acknowledgment,
     ) {
         val vedtak = cr.value().tilVedtak()
+        log.info("Mottok vedtak med id: ${vedtak.id} og status: ${vedtak.vedtakStatus}")
         try {
             arkivaren.arkiverVedtak(vedtak)
             acknowledgment.acknowledge()
