@@ -39,6 +39,7 @@ class VedtakStatusListener(
                 log.error("Feilet ved arkivering av vedtak status: ${vedtak.id} i DEV. Hopper over.", e)
                 return
             }
+            log.error("Feilet ved arkivering av vedtak status: ${vedtak.id}", e)
             throw e
         }
     }

@@ -13,5 +13,4 @@
 
     <logger name="com.openhtmltopdf" level="ERROR"/>
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.springframework.kafka" level="DEBUG"/>
 </configuration>
