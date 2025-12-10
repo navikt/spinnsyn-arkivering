@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate
 @Controller
 class DokArkivClient(
     private val dokarkivRestTemplate: RestTemplate,
-    @Value("\${dokarkiv.url}") private val dokarkivUrl: String,
+    @param:Value("\${dokarkiv.url}") private val dokarkivUrl: String,
 ) {
     @Retryable(backoff = Backoff(delay = 5000))
     fun opprettJournalpost(

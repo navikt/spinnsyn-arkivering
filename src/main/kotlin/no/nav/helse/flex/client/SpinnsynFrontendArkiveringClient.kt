@@ -14,7 +14,7 @@ import java.time.LocalDate
 @Component
 class SpinnsynFrontendArkiveringClient(
     private val spinnsynFrontendArkiveringRestTemplate: RestTemplate,
-    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String,
+    @param:Value("\${spinnsyn.frontend.arkivering.url}") private val url: String,
 ) {
     @Retryable
     fun hentVedtakSomHtml(

@@ -14,7 +14,7 @@ class Arkivaren(
     val pdfSkaperen: PdfSkaperen,
     val dokArkivClient: DokArkivClient,
     val arkivertVedtakRepository: ArkivertVedtakRepository,
-    @Value("\${nais.app.image}")
+    @param:Value("\${nais.app.image}")
     val naisAppImage: String,
 ) {
     private val log = logger()
