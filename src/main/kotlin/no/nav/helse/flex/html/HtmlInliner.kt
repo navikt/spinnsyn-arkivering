@@ -14,7 +14,7 @@ import java.util.*
 
 @Component
 class HtmlInliner(
-    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String,
+    @param:Value("\${spinnsyn.frontend.arkivering.url}") private val url: String,
 ) {
     var clock = Clock.systemDefaultZone()
 
