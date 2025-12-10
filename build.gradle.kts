@@ -23,7 +23,7 @@ repositories {
 
 ext["okhttp3.version"] = "4.12" // Token-support tester trenger MockWebServer.
 
-val testContainersVersion = "1.21.3"
+val testContainersVersion = "2.0.2"
 val tokenSupportVersion = "5.0.30"
 val logstashLogbackEncoderVersion = "9.0"
 val kluentVersion = "1.73"
@@ -59,10 +59,10 @@ dependencies {
     // veraPDF trenger fortsat javax-pakker: https://github.com/veraPDF/veraPDF-library/issues/1314
     implementation("org.glassfish.jaxb:jaxb-runtime:$jaxbRuntimeVersion")
 
-    testImplementation(platform("org.testcontainers:testcontainers-bom:$testContainersVersion"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:kafka")
+    testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-kafka:$testContainersVersion")
     testImplementation("org.awaitility:awaitility")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
