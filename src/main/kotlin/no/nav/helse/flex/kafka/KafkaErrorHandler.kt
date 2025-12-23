@@ -2,7 +2,6 @@ package no.nav.helse.flex.kafka
 
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
-import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.listener.MessageListenerContainer
 import org.springframework.stereotype.Component
@@ -22,19 +21,16 @@ class KafkaErrorHandler :
     // Bruker aliased logger for unngå kollisjon med CommonErrorHandler.logger(): LogAccessor.
     val log = slf4jLogger()
 
-    override fun handleBatch(
+    override fun handleOne(
         thrownException: Exception,
-        records: ConsumerRecords<*, *>,
+        record: ConsumerRecord<*, *>,
         consumer: Consumer<*, *>,
         container: MessageListenerContainer,
-        invokeListener: Runnable,
-    ) {
-        records.forEach { record ->
-            log.warn(
-                "Retry-forsøk for record med offset: ${record.offset()}, key: ${record.key()} på topic ${record.topic()}. Exception: ${thrownException::class.simpleName}",
-            )
-        }
-        super.handleBatch(thrownException, records, consumer, container, invokeListener)
+    ): Boolean {
+        log.warn(
+            "Feil ved prosessering av record med offset: ${record.offset()}, key: ${record.key()} på topic ${record.topic()}. Exception: ${thrownException::class.simpleName}",
+        )
+        return super.handleOne(thrownException, record, consumer, container)
     }
 
     override fun handleRemaining(
