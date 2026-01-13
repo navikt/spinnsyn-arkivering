@@ -15,7 +15,6 @@ class KafkaErrorHandler :
         ExponentialBackOff(1000L, 2.0).also {
             // 2 minutter max retry interval, maks 10 forsøk = ca 4 minutter totalt
             it.maxInterval = 60_000L * 2
-            it.maxElapsedTime = 60_000L * 4
         },
     ) {
     // Bruker aliased logger for unngå kollisjon med CommonErrorHandler.logger(): LogAccessor.
