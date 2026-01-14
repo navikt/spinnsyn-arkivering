@@ -25,6 +25,7 @@ class ArkiveringFixVedtakStatusListener(
         topics = [FLEX_VEDTAK_STATUS_TOPIC],
         containerFactory = "aivenKafkaListenerContainerFactory",
         groupId = "flex-arkivering-fix-vedtak-status",
+        properties = ["auto.offset.reset = earliest"],
     )
     fun listen(
         cr: ConsumerRecord<String, String>,
