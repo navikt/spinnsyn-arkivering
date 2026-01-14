@@ -7,6 +7,7 @@ import no.nav.helse.flex.logger
 import no.nav.helse.flex.objectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
+import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.listener.ConsumerSeekAware
 import org.springframework.kafka.support.Acknowledgment
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.time.ZoneOffset
 
+@Profile("!test")
 @Component
 class ArkiveringFixVedtakStatusListener(
     val arkivaren: Arkivaren,
