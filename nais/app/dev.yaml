@@ -8,10 +8,10 @@ ingress: https://spinnsyn-arkivering.intern.dev.nav.no
 cpu: 50m
 memory: 1024Mi
 external-host:
-  - dokarkiv.dev-fss-pub.nais.io
+  - dokarkiv-q2.dev-fss-pub.nais.io
   - cdn.nav.no
 env:
   SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID: dev-gcp.flex.spinnsyn-frontend-arkivering
   SPRING_PROFILES_ACTIVE: default,testcontroller
   DOKARKIV_AAD_CLIENT_ID: dev-fss.teamdokumenthandtering.dokarkiv-q1
-  DOKARKIV_URL: https://dokarkiv.dev-fss-pub.nais.io
+  DOKARKIV_URL: https://dokarkiv-q2.dev-fss-pub.nais.io
