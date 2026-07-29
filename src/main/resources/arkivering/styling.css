@@ -41,7 +41,7 @@ td {
     padding-top: 5px !important;
 }
 
-.navds-label {
+.aksel-label {
     font-weight: bold;
 }
 
@@ -127,61 +127,151 @@ td {
     content: counter(pages);
 }
 
-/* tag styling */
-.navds-tag {
+/* tag styling — bruker ekte border siden openhtmltopdf ikke støtter box-shadow */
+.aksel-tag {
     display: inline-block;
 }
-.navds-tag.navds-tag--small {
+.aksel-tag--small {
     padding-left: 4px;
     padding-right: 4px;
     font-size: 0.875rem;
 }
-.navds-tag.navds-tag--info {
-    border-color: #368da8;
+.aksel-tag[data-variant="outline"] {
+    border: 1px solid #2176d4;
+    background-color: #e4eeff;
+    color: #002459;
 }
-.navds-tag.navds-tag--success {
-    border-color: #06893a;
+.aksel-tag[data-variant="outline"][data-color="success"] {
+    border-color: #00893c;
+    background-color: #e2fde8;
+    color: #002e00;
 }
-.navds-tag.navds-tag--warning {
-    border-color: #d47b00;
+.aksel-tag[data-variant="outline"][data-color="info"] {
+    border-color: #457c9d;
+    background-color: #eef6fc;
+    color: #002942;
 }
-.navds-tag.navds-tag--error {
-    border-color: #c30000;
+.aksel-tag[data-variant="outline"][data-color="warning"] {
+    border-color: #ca5000;
+    background-color: #fff5e4;
+    color: #481700;
+}
+.aksel-tag[data-variant="outline"][data-color="error"],
+.aksel-tag[data-variant="outline"][data-color="danger"] {
+    border-color: #e22948;
+    background-color: #fff2f7;
+    color: #560000;
+}
+.aksel-tag[data-variant="outline"][data-color="neutral"] {
+    border-color: #6f7785;
+    background-color: #f5f6f7;
+    color: #202733;
+}
+
+/* tabell */
+.aksel-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.aksel-table__data-cell,
+.aksel-table__header-cell {
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+}
+.aksel-table__header .aksel-table__data-cell,
+.aksel-table__header .aksel-table__header-cell {
+    border-bottom: 2px solid #cfd3d8;
+}
+td.aksel-table__data-cell--align-right,
+th.aksel-table__header-cell--align-right {
+    text-align: right !important;
+}
+
+/* dagtabell kolonnebredder */
+.aksel-table th:first-child,
+.aksel-table td:first-child {
+    width: 25%;
+}
+.aksel-table th:last-child,
+.aksel-table td:last-child {
+    width: 50%;
+}
+
+a, a:visited {
+    color: black;
+    text-decoration: underline;
 }
 
 /* tekst styling */
-.navds-body-long.navds-typo--spacing {
+.block {
+    display: block;
+}
+.aksel-body-long.aksel-typo--spacing {
     margin-bottom: 2rem;
 }
-.navds-body-short.navds-typo--spacing {
+.aksel-body-short.aksel-typo--spacing {
     margin-bottom: 1rem;
 }
-.navds-read-more__content {
+.aksel-read-more__content {
     border-left: 1px solid #838c9a;
 }
 
 /* panel styling */
-.navds-panel {
+.aksel-panel {
     border: 1px solid #838c9a;
     padding: 1rem;
 }
 
-/* expansion crad styling */
-.navds-expansioncard {
+/* expansion card styling */
+.aksel-expansioncard {
     border: 1px solid #838c9a;
     border-radius: 8px;
     --__ac-expansioncard-border-width: 0;
 }
-.navds-expansioncard__header {
+.aksel-expansioncard__header {
     padding-top: 1rem;
     --__ac-expansioncard-padding-block: 0;
 }
-.navds-expansioncard__content {
+.aksel-expansioncard__content {
     padding: 1rem;
     --__ac-expansioncard-padding-block: 0;
     --__ac-expansioncard-padding-inline: 0;
 }
-.navds-alert {
+
+/* skjul toggle-knapper — SVG er fjernet, containerne renderes som tomme bokser */
+.aksel-accordion__header-button,
+.aksel-accordion__icon-wrapper,
+.aksel-accordion__header-chevron,
+.aksel-read-more__expand-icon,
+.aksel-read-more__button svg,
+.aksel-expansioncard__header-button,
+.aksel-expansioncard__header-chevron,
+.aksel-expansioncard__header-chevron-wrapper,
+.aksel-expansioncard__expand-icon {
+    display: none !important;
+}
+
+/* accordion — fjern border/box-shadow som openhtmltopdf ikke håndterer */
+.aksel-accordion__item {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.aksel-accordion__header {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    display: block !important;
+    text-align: left !important;
+    width: 100% !important;
+}
+
+.aksel-alert {
     padding: 1rem;
     border-radius: 4px;
     --a-border-radius-medium: 0;
