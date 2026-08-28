@@ -1,6 +1,5 @@
 package no.nav.helse.flex.client
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.JournalpostResponse
 import no.nav.helse.flex.objectMapper
@@ -9,18 +8,18 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Controller
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import tools.jackson.module.kotlin.readValue
 
 @Controller
 class DokArkivClient(
     private val dokarkivRestTemplate: RestTemplate,
     @param:Value("\${dokarkiv.url}") private val dokarkivUrl: String,
 ) {
-    @Retryable(backoff = Backoff(delay = 5000))
+    @Retryable(delay = 5000)
     fun opprettJournalpost(
         pdfRequest: JournalpostRequest,
         vedtakId: String,

@@ -1,6 +1,5 @@
 package no.nav.helse.flex.pdfgenerering
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.slf4j.Slf4jLogger
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
@@ -11,6 +10,7 @@ import org.apache.pdfbox.io.IOUtils
 import org.verapdf.pdfa.Foundries
 import org.verapdf.pdfa.flavours.PDFAFlavour
 import org.verapdf.pdfa.results.TestAssertion
+import tools.jackson.module.kotlin.readValue
 import java.io.*
 
 object PdfGenerering {

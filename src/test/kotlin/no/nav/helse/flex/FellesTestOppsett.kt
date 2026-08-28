@@ -1,17 +1,17 @@
 package no.nav.helse.flex
 
+import mockwebserver3.MockResponse
+import mockwebserver3.MockWebServer
 import no.nav.helse.flex.arkivering.ArkivertVedtakRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldStartWith
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.testcontainers.kafka.KafkaContainer
 import org.testcontainers.postgresql.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
@@ -81,7 +81,7 @@ abstract class FellesTestOppsett {
     ) {
         val innhold = HentingOgPdfGenereringTest::class.java.getResource(fil).readText()
 
-        val response = MockResponse().setBody(innhold)
+        val response = MockResponse.Builder().body(innhold)
         imageName?.let {
             response.setHeader("x-nais-app-image", it)
         }
@@ -92,7 +92,7 @@ abstract class FellesTestOppsett {
             response.setHeader("x-vedtak-fom", it)
         }
 
-        spinnsynArkiveringFrontendMockWebServer.enqueue(response)
+        spinnsynArkiveringFrontendMockWebServer.enqueue(response.build())
     }
 
     fun validerRequests(
@@ -100,12 +100,12 @@ abstract class FellesTestOppsett {
         fnr: String,
     ) {
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.path `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
         htmlRequest.headers["fnr"] `should be equal to` fnr
         htmlRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
 
         val stylesheetRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        stylesheetRequest.path `should be equal to` "/syk/sykepenger/_next/static/css/yes.css"
+        stylesheetRequest.target `should be equal to` "/syk/sykepenger/_next/static/css/yes.css"
         stylesheetRequest.headers["fnr"].shouldBeNull()
         stylesheetRequest.headers["Authorization"].shouldBeNull()
     }
