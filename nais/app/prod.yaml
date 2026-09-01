@@ -10,9 +10,10 @@ external-host:
   - dokarkiv.prod-fss-pub.nais.io
   - cdn.nav.no
 db_flags:
-  cloudsql.enable_pgaudit: "true"
+  cloudsql.enable_pgaudit: "on"
   pgaudit.log: 'write,ddl,role'
   pgaudit.log_parameter: "on"
+  pgaudit.log_relation: "on"
 env:
   SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID: prod-gcp.flex.spinnsyn-frontend-arkivering
   DOKARKIV_AAD_CLIENT_ID: prod-fss.teamdokumenthandtering.dokarkiv
