@@ -1,6 +1,5 @@
 package no.nav.helse.flex
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.JournalpostResponse
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_STATUS_TOPIC
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import tools.jackson.module.kotlin.readValue
 import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.TimeUnit
