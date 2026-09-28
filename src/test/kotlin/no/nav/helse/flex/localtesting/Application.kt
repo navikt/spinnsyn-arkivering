@@ -7,9 +7,9 @@ import no.nav.helse.flex.config.AadRestTemplateConfiguration
 import no.nav.helse.flex.html.HtmlInliner
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.boot.runApplication
-import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
