@@ -1,12 +1,11 @@
 package no.nav.helse.flex
 
-import com.fasterxml.jackson.module.kotlin.readValue
+import mockwebserver3.MockResponse
 import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.JournalpostResponse
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_STATUS_TOPIC
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.kafka.VedtakStatusDto
-import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldStartWith
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import tools.jackson.module.kotlin.readValue
 import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -41,9 +41,11 @@ class IntegrasjonTest : FellesTestOppsett() {
                 journalpostferdigstilt = true,
             )
         val response =
-            MockResponse()
-                .setBody(journalpostResponse.serialisertTilString())
+            MockResponse
+                .Builder()
+                .body(journalpostResponse.serialisertTilString())
                 .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .build()
         dokarkivMockWebServer.enqueue(response)
 
         kafkaProducer
@@ -62,12 +64,12 @@ class IntegrasjonTest : FellesTestOppsett() {
 
         validerRequests(vedtakId, fnr)
         val journalfoeringRequest = dokarkivMockWebServer.takeRequest()
-        journalfoeringRequest.path `should be equal to` "/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true"
+        journalfoeringRequest.target `should be equal to` "/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true"
         journalfoeringRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
         journalfoeringRequest.headers["Nav-Callid"] `should be equal to` vedtakId
 
         val jpostRequest: JournalpostRequest =
-            objectMapper.readValue(journalfoeringRequest.body.readString(Charset.defaultCharset()))
+            objectMapper.readValue(journalfoeringRequest.body!!.string(Charset.defaultCharset()))
         jpostRequest.tittel `should be equal to` "Svar på søknad om sykepenger for periode: 12.03.2020 til 30.04.2020"
         jpostRequest.kanal `should be equal to` "NAV_NO_UTEN_VARSLING"
 
@@ -133,9 +135,11 @@ class IntegrasjonTest : FellesTestOppsett() {
                 melding = "Feil ved oppretting av journalpost.",
             )
         val response =
-            MockResponse()
-                .setBody(journalpostResponse.serialisertTilString())
+            MockResponse
+                .Builder()
+                .body(journalpostResponse.serialisertTilString())
                 .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .build()
         dokarkivMockWebServer.enqueue(response)
 
         kafkaProducer

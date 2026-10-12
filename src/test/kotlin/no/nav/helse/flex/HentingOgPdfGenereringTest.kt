@@ -66,7 +66,7 @@ class HentingOgPdfGenereringTest : FellesTestOppsett() {
         ex.message `should be equal to` "Flex-styling er ikke støttet"
 
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.path `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
     }
 
     @Test
@@ -86,7 +86,7 @@ class HentingOgPdfGenereringTest : FellesTestOppsett() {
         ex.message `should be equal to` "Forventa at første child har id __next"
 
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.path `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
     }
 
     @Test
@@ -106,6 +106,6 @@ class HentingOgPdfGenereringTest : FellesTestOppsett() {
         ex.message `should be equal to` "Forventa bare en child til body"
 
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.path `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
     }
 }
