@@ -1,8 +1,10 @@
-db_type: POSTGRES_14
-db_tier: db-f1-micro
 app: spinnsyn-arkivering
 namespace: flex
 team: flex
+db_type: POSTGRES_18
+db_tier: db-f1-micro
+minReplicas: 1
+maxReplicas: 1
 kafkaPool: nav-dev
 azureTenant: trygdeetaten.no
 ingress: https://spinnsyn-arkivering.intern.dev.nav.no
