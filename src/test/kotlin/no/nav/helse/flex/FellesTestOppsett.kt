@@ -1,12 +1,12 @@
 package no.nav.helse.flex
 
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldStartWith
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
 import no.nav.helse.flex.arkivering.ArkivertVedtakRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.shouldBeNull
-import org.amshove.kluent.shouldStartWith
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -101,12 +101,12 @@ abstract class FellesTestOppsett {
         fnr: String,
     ) {
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
-        htmlRequest.headers["fnr"] `should be equal to` fnr
+        htmlRequest.target shouldBe "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.headers["fnr"] shouldBe fnr
         htmlRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
 
         val stylesheetRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        stylesheetRequest.target `should be equal to` "/syk/sykepenger/_next/static/css/yes.css"
+        stylesheetRequest.target shouldBe "/syk/sykepenger/_next/static/css/yes.css"
         stylesheetRequest.headers["fnr"].shouldBeNull()
         stylesheetRequest.headers["Authorization"].shouldBeNull()
     }
