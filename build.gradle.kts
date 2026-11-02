@@ -24,7 +24,7 @@ repositories {
 val testContainersVersion = "2.0.5"
 val tokenSupportVersion = "6.0.12"
 val logstashLogbackEncoderVersion = "9.0"
-val kluentVersion = "1.73"
+val kotestVersion = "6.2.6"
 val openHtmlToPdfVersion = "1.0.10"
 val veraPdfVersion = "1.30.3"
 val jsoupVersion = "1.23.2"
@@ -65,7 +65,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-kafka:$testContainersVersion")
     testImplementation("org.awaitility:awaitility")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
-    testImplementation("org.amshove.kluent:kluent:$kluentVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 }
 
 kotlin {

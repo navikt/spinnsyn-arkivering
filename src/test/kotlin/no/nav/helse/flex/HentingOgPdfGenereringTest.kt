@@ -1,8 +1,8 @@
 package no.nav.helse.flex
 
+import io.kotest.matchers.shouldBe
 import no.nav.helse.flex.arkivering.PdfSkaperen
 import no.nav.helse.flex.html.HtmlInliner
-import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,10 +63,10 @@ class HentingOgPdfGenereringTest : FellesTestOppsett() {
                 arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
             }
 
-        ex.message `should be equal to` "Flex-styling er ikke støttet"
+        ex.message shouldBe "Flex-styling er ikke støttet"
 
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.target shouldBe "/syk/sykepenger/vedtak/arkivering/$uuid"
     }
 
     @Test
@@ -83,10 +83,10 @@ class HentingOgPdfGenereringTest : FellesTestOppsett() {
                 arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
             }
 
-        ex.message `should be equal to` "Forventa at første child har id __next"
+        ex.message shouldBe "Forventa at første child har id __next"
 
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.target shouldBe "/syk/sykepenger/vedtak/arkivering/$uuid"
     }
 
     @Test
@@ -103,9 +103,9 @@ class HentingOgPdfGenereringTest : FellesTestOppsett() {
                 arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
             }
 
-        ex.message `should be equal to` "Forventa bare en child til body"
+        ex.message shouldBe "Forventa bare en child til body"
 
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        htmlRequest.target `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
+        htmlRequest.target shouldBe "/syk/sykepenger/vedtak/arkivering/$uuid"
     }
 }

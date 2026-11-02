@@ -1,13 +1,13 @@
 package no.nav.helse.flex
 
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldStartWith
 import mockwebserver3.MockResponse
 import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.JournalpostResponse
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_STATUS_TOPIC
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.kafka.VedtakStatusDto
-import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.shouldStartWith
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.Awaitility.await
@@ -64,28 +64,28 @@ class IntegrasjonTest : FellesTestOppsett() {
 
         validerRequests(vedtakId, fnr)
         val journalfoeringRequest = dokarkivMockWebServer.takeRequest()
-        journalfoeringRequest.target `should be equal to` "/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true"
+        journalfoeringRequest.target shouldBe "/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true"
         journalfoeringRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
-        journalfoeringRequest.headers["Nav-Callid"] `should be equal to` vedtakId
+        journalfoeringRequest.headers["Nav-Callid"] shouldBe vedtakId
 
         val jpostRequest: JournalpostRequest =
             objectMapper.readValue(journalfoeringRequest.body!!.string(Charset.defaultCharset()))
-        jpostRequest.tittel `should be equal to` "Svar på søknad om sykepenger for periode: 12.03.2020 til 30.04.2020"
-        jpostRequest.kanal `should be equal to` "NAV_NO_UTEN_VARSLING"
+        jpostRequest.tittel shouldBe "Svar på søknad om sykepenger for periode: 12.03.2020 til 30.04.2020"
+        jpostRequest.kanal shouldBe "NAV_NO_UTEN_VARSLING"
 
         val arkivertVedtak = arkivertVedtakRepository.findAll().first { it.vedtakId == vedtakId }
 
-        arkivertVedtak.vedtakId `should be equal to` vedtakId
-        arkivertVedtak.journalpostId `should be equal to` "jpostid123"
-        arkivertVedtak.fnr `should be equal to` fnr
-        arkivertVedtak.spinnsynArkiveringImage `should be equal to` "docker.github/spinnsyn-arkivering-v2.0"
-        arkivertVedtak.spinnsynFrontendImage `should be equal to` "docker.github/spinnsyn-frontend-v2.0"
+        arkivertVedtak.vedtakId shouldBe vedtakId
+        arkivertVedtak.journalpostId shouldBe "jpostid123"
+        arkivertVedtak.fnr shouldBe fnr
+        arkivertVedtak.spinnsynArkiveringImage shouldBe "docker.github/spinnsyn-arkivering-v2.0"
+        arkivertVedtak.spinnsynFrontendImage shouldBe "docker.github/spinnsyn-frontend-v2.0"
     }
 
     @Test
     @Order(2)
     fun `Arkiverer ikke ett duplikat vedtak`() {
-        arkivertVedtakRepository.count() `should be equal to` 1L
+        arkivertVedtakRepository.count() shouldBe 1L
         kafkaProducer
             .send(
                 ProducerRecord(
@@ -104,7 +104,7 @@ class IntegrasjonTest : FellesTestOppsett() {
     @Test
     @Order(3)
     fun `Arkiverer ikke vedtak som ikke har status LEST`() {
-        arkivertVedtakRepository.count() `should be equal to` 1L
+        arkivertVedtakRepository.count() shouldBe 1L
         kafkaProducer
             .send(
                 ProducerRecord(
