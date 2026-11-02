@@ -1,8 +1,10 @@
-db_type: POSTGRES_14
-db_tier: db-custom-1-3840
 app: spinnsyn-arkivering
 namespace: flex
 team: flex
+db_type: POSTGRES_14
+db_tier: db-custom-1-3840
+minReplicas: 1
+maxReplicas: 1
 kafkaPool: nav-prod
 azureTenant: nav.no
 cpu: 100m
