@@ -1,7 +1,7 @@
 app: spinnsyn-arkivering
 namespace: flex
 team: flex
-db_type: POSTGRES_14
+db_type: POSTGRES_18
 db_tier: db-custom-1-3840
 minReplicas: 0
 maxReplicas: 0
