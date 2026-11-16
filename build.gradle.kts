@@ -27,7 +27,7 @@ val logstashLogbackEncoderVersion = "9.0"
 val kotestVersion = "6.2.6"
 val openHtmlToPdfVersion = "1.0.10"
 val veraPdfVersion = "1.30.3"
-val jsoupVersion = "1.23.2"
+val jsoupVersion = "1.24.1"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val mockWebServerVersion = "5.5.1"
 
