@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.listener.ContainerProperties
+import java.time.Duration
 
 private const val JAVA_KEYSTORE = "JKS"
 private const val PKCS12 = "PKCS12"
@@ -59,6 +60,7 @@ class AivenKafkaConfig(
         factory.setConsumerFactory(DefaultKafkaConsumerFactory(config))
         factory.setCommonErrorHandler(kafkaErrorHandler)
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+        factory.containerProperties.setAuthExceptionRetryInterval(Duration.ofSeconds(10))
         factory.setConcurrency(3)
         return factory
     }
