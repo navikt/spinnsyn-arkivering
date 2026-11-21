@@ -24,7 +24,7 @@ repositories {
 val testContainersVersion = "2.0.5"
 val tokenSupportVersion = "6.0.12"
 val logstashLogbackEncoderVersion = "9.0"
-val kotestVersion = "6.2.6"
+val kotestVersion = "6.2.7"
 val openHtmlToPdfVersion = "1.0.10"
 val veraPdfVersion = "1.30.3"
 val jsoupVersion = "1.24.1"
