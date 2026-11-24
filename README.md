@@ -15,8 +15,15 @@ Kompiler `spinnsyn-frontend` med `npm run build`.
 
 Start frontend med `npm run start-ingen-dekorator`
 
-Start applikasjonen i `src/test/kotlin/no/helse/flex/localtesting/Application.kt` i IntelliJ. Husk å angi
+Start applikasjonen i `src/test/kotlin/no/nav/helse/flex/localtesting/Application.kt` i IntelliJ. Husk å angi
 at `Active profile` er `localtesting` i `Run/Debug Configurations`.
+
+For å starte fra kommandolinjen med Gradle, kjør:
+
+```bash
+./gradlew bootTestRun --args='--spring.profiles.active=localtesting'
+```
+
 
 Åpne `http://localhost:8888/api/test/pdf/` og du får lastet ned en PDF
 
