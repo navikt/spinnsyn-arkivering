@@ -38,7 +38,7 @@ class TestController {
     final val pdfSkaperen: PdfSkaperen
 
     init {
-        val url = "http://localhost:8080"
+        val url = "http://localhost:3000"
 
         val htmlInliner = HtmlInliner(url)
         val spinnsynFrontendArkiveringClient =
